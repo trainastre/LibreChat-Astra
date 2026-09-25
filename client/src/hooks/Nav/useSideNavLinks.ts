@@ -136,73 +136,53 @@ export default function useSideNavLinks({
       });
     }
 
-    if (hasAccessToSkills && skillsEnabled) {
-      links.push({
-        title: 'com_ui_skills',
-        label: '',
-        icon: ScrollText,
-        id: 'skills',
-        Component: SkillsAccordion,
-      });
-    }
+    // if (hasAccessToSkills && skillsEnabled) {
+    //   links.push({
+    //     title: 'com_ui_skills',
+    //     label: '',
+    //     icon: ScrollText,
+    //     id: 'skills',
+    //     Component: SkillsAccordion,
+    //   });
+    // }
 
-    // Scheduled chats are EXPERIMENTAL and default-OFF: the server enables them only
-    // when an admin opts in explicitly, so ABSENT config means disabled here too.
-    // Mirrors getLimits exactly — absent/null/`false` are all off, `true` is on, and the
-    // object form is on unless it sets `use: false`. Any mismatch would show an entry
-    // whose create/run operations the backend rejects.
-    const schedulesConfig = interfaceConfig.schedules;
-    const schedulesEnabled =
-      schedulesConfig != null &&
-      schedulesConfig !== false &&
-      !(typeof schedulesConfig === 'object' && schedulesConfig.use === false);
-    if (hasAccessToSchedules && schedulesEnabled) {
-      links.push({
-        title: 'com_ui_schedules',
-        label: '',
-        icon: CalendarClock,
-        id: 'schedules',
-        Component: SchedulePanel,
-      });
-    }
+    // if (hasAccessToPrompts) {
+    //   links.push({
+    //     title: 'com_ui_prompts',
+    //     label: '',
+    //     icon: NotebookPen,
+    //     id: 'prompts',
+    //     Component: PromptsAccordion,
+    //   });
+    // }
 
-    if (hasAccessToPrompts) {
-      links.push({
-        title: 'com_ui_prompts',
-        label: '',
-        icon: NotebookPen,
-        id: 'prompts',
-        Component: PromptsAccordion,
-      });
-    }
+    // if (hasAccessToMemories && hasAccessToReadMemories) {
+    //   links.push({
+    //     title: 'com_ui_memories',
+    //     label: '',
+    //     icon: Brain,
+    //     id: 'memories',
+    //     Component: MemoryPanel,
+    //   });
+    // }
 
-    if (hasAccessToMemories && hasAccessToReadMemories) {
-      links.push({
-        title: 'com_ui_memories',
-        label: '',
-        icon: Brain,
-        id: 'memories',
-        Component: MemoryPanel,
-      });
-    }
+    // if (hasAccessToBookmarks) {
+    //   links.push({
+    //     title: 'com_sidepanel_conversation_tags',
+    //     label: '',
+    //     icon: Bookmark,
+    //     id: 'bookmarks',
+    //     Component: BookmarkPanel,
+    //   });
+    // }
 
-    if (hasAccessToBookmarks) {
-      links.push({
-        title: 'com_sidepanel_conversation_tags',
-        label: '',
-        icon: Bookmark,
-        id: 'bookmarks',
-        Component: BookmarkPanel,
-      });
-    }
-
-    links.push({
-      title: 'com_sidepanel_attach_files',
-      label: '',
-      icon: AttachmentIcon,
-      id: 'files',
-      Component: FilesPanel,
-    });
+    // links.push({
+    //   title: 'com_sidepanel_attach_files',
+    //   label: '',
+    //   icon: AttachmentIcon,
+    //   id: 'files',
+    //   Component: FilesPanel,
+    // });
 
     if (
       interfaceConfig.parameters === true &&

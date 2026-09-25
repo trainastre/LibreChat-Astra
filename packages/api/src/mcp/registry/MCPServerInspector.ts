@@ -154,6 +154,14 @@ export class MCPServerInspector {
       return;
     }
 
+    // User-provided custom vars (e.g. X-Auth-Token via {{MY_API_KEY}}) protect the server
+    // with a per-user token, not OAuth. Probing bare would return 401 and incorrectly flip
+    // requiresOAuth to true, causing the OAuth machinery to run instead of the custom vars flow.
+    if (hasCustomUserVars(this.config)) {
+      this.config.requiresOAuth = false;
+      return;
+    }
+
     const result = await detectOAuthRequirement(
       this.config.url,
       this.allowedDomains,

@@ -8,35 +8,65 @@ export default function Instructions() {
   const { control } = useFormContext<AgentForm>();
 
   return (
-    <Controller
-      name="instructions"
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <div className="mb-3 flex flex-col">
-          <VariableEditor
-            id="instructions"
-            label={localize('com_ui_instructions')}
-            value={field.value ?? ''}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            inputRef={field.ref}
-            placeholder={localize('com_agents_instructions_placeholder')}
-            className="min-h-[88px] resize-y"
-            labelClassName="block text-[11px] font-medium uppercase tracking-wide text-text-secondary"
-            rows={3}
-            required={true}
-            invalid={error != null}
+    <div className="mb-4">
+      <div className="mb-2 flex items-center">
+        <label className="sr-only" htmlFor="instructions">
+          {localize('com_ui_instructions')}
+        </label>
+        <div title="Add variables to instructions">
+          <DropdownPopup
+            portal={true}
+            mountByState={true}
+            unmountOnHide={true}
+            preserveTabOrder={true}
+            isOpen={isMenuOpen}
+            setIsOpen={setIsMenuOpen}
+            trigger={
+              <Menu.MenuButton
+                id="variables-menu-button"
+                aria-label="Add variable to instructions"
+                className="flex h-7 items-center gap-1 rounded-md border border-border-medium bg-surface-secondary px-2 py-0 text-sm text-text-primary transition-colors duration-200 hover:bg-surface-tertiary"
+              >
+                <PlusCircle className="mr-1 h-3 w-3 text-text-secondary" aria-hidden={true} />
+                {localize('com_ui_variables')}
+              </Menu.MenuButton>
+            }
+            items={variableOptions.map((option) => ({
+              label: localize(option.label) || option.label,
+              onClick: () => handleAddVariable(option.label, option.value),
+            }))}
+            menuId={menuId}
+            className="z-30"
           />
-          {error && (
-            <span
-              className="mt-1 text-xs text-text-destructive transition duration-300 ease-in-out"
-              role="alert"
-            >
-              {localize('com_ui_field_required')}
-            </span>
-          )}
         </div>
-      )}
-    />
+      </div>
+      <Controller
+        name="instructions"
+        control={control}
+        render={({ field, fieldState: { error } }) => (
+          <>
+            <textarea
+              {...field}
+              value={field.value ?? ''}
+              className={cn(inputClass, 'min-h-[100px] resize-y')}
+              id="instructions"
+              placeholder={localize('com_agents_instructions_placeholder')}
+              rows={3}
+              aria-label="Agent instructions"
+              aria-required="true"
+              aria-invalid={error ? 'true' : 'false'}
+            />
+            {error && (
+              <span
+                className="text-sm text-red-500 transition duration-300 ease-in-out"
+                role="alert"
+              >
+                {localize('com_ui_field_required')}
+              </span>
+            )}
+          </>
+        )}
+      />
+    </div>
   );
 }

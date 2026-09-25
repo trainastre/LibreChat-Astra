@@ -38,7 +38,8 @@ import useDrawerDismiss from '~/hooks/Nav/useDrawerDismiss';
 import useSidebarToggle from '~/hooks/Nav/useSidebarToggle';
 import useSidebarState from '~/hooks/Nav/useSidebarState';
 import { TermsAndConditionsModal } from '~/components/ui';
-import useDrawerSwipe from '~/hooks/Nav/useDrawerSwipe';
+import { FeedbackButton } from '~/components/Feedback';
+import { Tutorial } from '~/components/Tutorial';
 import { useHealthCheck } from '~/data-provider';
 import { Banner } from '~/components/Banners';
 import store from '~/store';
@@ -144,83 +145,45 @@ export default function Root() {
   }
 
   return (
-    <CodeHighlightThrottleContext.Provider value={highlightThrottleMs}>
-      <SetConvoProvider>
-        <FileMapContext.Provider value={fileMap}>
-          <AssistantsMapContext.Provider value={assistantsMap}>
-            <AgentsMapContext.Provider value={agentsMap}>
-              <PromptGroupsProvider>
-                <Banner onHeightChange={setBannerHeight} />
-                <div className="flex" style={{ height: `calc(100dvh - ${bannerHeight}px)` }}>
+    <SetConvoProvider>
+      <FileMapContext.Provider value={fileMap}>
+        <AssistantsMapContext.Provider value={assistantsMap}>
+          <AgentsMapContext.Provider value={agentsMap}>
+            <PromptGroupsProvider>
+              <Banner onHeightChange={setBannerHeight} />
+              <div className="flex" style={{ height: `calc(100dvh - ${bannerHeight}px)` }}>
+                <div className="relative z-0 flex h-full w-full overflow-hidden">
+                  <UnifiedSidebar />
                   <div
-                    className="relative z-0 flex h-full w-full overflow-hidden"
-                    /** The drawer and the pane both read this, so their travel
-                     *  cannot disagree about how far the drawer opens. */
-                    style={
-                      {
-                        [MOBILE_DRAWER_WIDTH_VAR]: drawerStrip
-                          ? MOBILE_DRAWER_STRIP_WIDTH
-                          : MOBILE_DRAWER_FULL_WIDTH,
-                      } as React.CSSProperties
-                    }
+                    className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"
+                    style={{
+                      transform:
+                        isSmallScreen && sidebarExpanded ? 'translateX(min(85vw, 380px))' : 'none',
+                      transition: 'transform 300ms cubic-bezier(0.2, 0, 0, 1)',
+                    }}
+                    inert={isSmallScreen && sidebarExpanded ? '' : undefined}
                   >
-                    {/* The drawer stops being painted once it is closed and
-                        settled, so it needs the same travel window the scrim and
-                        the pane's `inert` read. */}
-                    <UnifiedSidebar isSliding={isSliding} />
-                    <div
-                      ref={paneRef}
-                      /** Focus target of last resort when the drawer closes on a
-                       *  route that renders no opener. Not in the tab order. */
-                      tabIndex={-1}
-                      className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden focus:outline-none"
-                      style={{
-                        /** A percentage of the pane's own width, so it tracks the
-                         *  drawer without a literal and survives rotation. */
-                        transform: isSmallScreen && sidebarExpanded ? MOBILE_PANE_SHIFT : 'none',
-                        transition: prefersReducedMotion ? undefined : SIDEBAR_TRANSITION,
-                      }}
-                      /** Recoil's flip is deferred past the opening frames and
-                       *  the closing transition outlives it at the other end, so
-                       *  `isSliding` covers the travel `sidebarExpanded` brackets
-                       *  too late and drops too early. */
-                      inert={isSmallScreen && (sidebarExpanded || isSliding) ? '' : undefined}
-                    >
-                      <Outlet />
-                    </div>
-                    {/* Without the strip the scrim exists only for the travel:
-                      through a close that began while the strip was still on
-                      (disabling it unmounts the scrim at once, but the drawer
-                      needs the whole transition to widen), and through an open
-                      the deferred flip has not committed yet. Once expanded
-                      lands, a full-width drawer covers it, so keeping it
-                      mounted would only expose a duplicate dismiss control. */}
-                    {isSmallScreen && (drawerStrip || (isSliding && !sidebarExpanded)) && (
-                      <MobileDrawerScrim
-                        expanded={sidebarExpanded}
-                        isSliding={isSliding}
-                        prefersReducedMotion={prefersReducedMotion}
-                        onClick={onScrimClick}
-                      />
-                    )}
+                    <Outlet />
                   </div>
                 </div>
-              </PromptGroupsProvider>
-              <KeyboardShortcutsProvider />
-            </AgentsMapContext.Provider>
-            {config?.interface?.termsOfService?.modalAcceptance === true && (
-              <TermsAndConditionsModal
-                open={showTerms}
-                onOpenChange={setShowTerms}
-                onAccept={handleAcceptTerms}
-                onDecline={handleDeclineTerms}
-                title={config.interface.termsOfService.modalTitle}
-                modalContent={config.interface.termsOfService.modalContent}
-              />
-            )}
-          </AssistantsMapContext.Provider>
-        </FileMapContext.Provider>
-      </SetConvoProvider>
-    </CodeHighlightThrottleContext.Provider>
+              </div>
+              <FeedbackButton />
+              <Tutorial />
+            </PromptGroupsProvider>
+          </AgentsMapContext.Provider>
+          {config?.interface?.termsOfService?.modalAcceptance === true && (
+            <TermsAndConditionsModal
+              open={showTerms}
+              onOpenChange={setShowTerms}
+              onAccept={handleAcceptTerms}
+              onDecline={handleDeclineTerms}
+              title={config.interface.termsOfService.modalTitle}
+              modalContent={config.interface.termsOfService.modalContent}
+            />
+          )}
+          <KeyboardShortcutsProvider />
+        </AssistantsMapContext.Provider>
+      </FileMapContext.Provider>
+    </SetConvoProvider>
   );
 }

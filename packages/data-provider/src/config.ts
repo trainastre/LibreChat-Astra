@@ -4013,6 +4013,10 @@ export enum SettingsTabValues {
    * Tab for About / Build Info
    */
   ABOUT = 'about',
+  /**
+   * Admin-only tab for viewing user feedback reports
+   */
+  ADMIN_FEEDBACK = 'admin_feedback',
 }
 
 export enum STTProviders {
@@ -4404,7 +4408,7 @@ export function splitToolCallName(
 }
 
 /** Maximum explicit subagent hops allowed from any root agent at runtime. */
-export const MAX_SUBAGENT_DEPTH = 5;
+export const MAX_SUBAGENT_DEPTH = 50;
 
 /** Maximum unique explicit subagent targets that may be loaded at runtime. */
 export const MAX_SUBAGENT_GRAPH_NODES = 50;

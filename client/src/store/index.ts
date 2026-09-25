@@ -18,7 +18,7 @@ export * from './favorites';
 export * from './sandbox';
 export * from './ptc';
 export * from './usage';
-export * from './steer';
+export * from './misc';
 
 export default {
   ...artifacts,

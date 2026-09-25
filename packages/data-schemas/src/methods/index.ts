@@ -19,12 +19,8 @@ import { createRoleMethods, RoleConflictError } from './role';
 import { createKeyMethods, type KeyMethods } from './key';
 /* Memories */
 import { createMemoryMethods, type MemoryMethods } from './memory';
-/* Tool Favorites */
-import {
-  createToolFavoriteMethods,
-  MAX_TOOL_FAVORITES,
-  type ToolFavoriteMethods,
-} from './favorite';
+/* Feedback */
+import { createFeedbackMethods, type FeedbackMethods } from './feedback';
 /* Agent Categories */
 import { createAgentCategoryMethods, type AgentCategoryMethods } from './agentCategory';
 /* Agent API Keys */
@@ -234,7 +230,7 @@ export type AllMethods = UserMethods &
   KeyMethods &
   FileMethods &
   MemoryMethods &
-  ToolFavoriteMethods &
+  FeedbackMethods &
   AgentCategoryMethods &
   AgentApiKeyMethods &
   MCPServerMethods &
@@ -464,7 +460,7 @@ export function createMethods(
     ...createKeyMethods(mongoose),
     ...createFileMethods(mongoose),
     ...createMemoryMethods(mongoose),
-    ...createToolFavoriteMethods(mongoose),
+    ...createFeedbackMethods(mongoose),
     ...createAgentCategoryMethods(mongoose),
     ...createAgentApiKeyMethods(mongoose),
     ...createMCPServerMethods(mongoose),

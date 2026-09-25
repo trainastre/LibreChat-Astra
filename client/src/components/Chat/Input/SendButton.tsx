@@ -24,7 +24,9 @@ const SubmitButton = React.memo(
             aria-label={localize('com_nav_send_message')}
             id="send-button"
             disabled={props.disabled}
-            className={composerSubmitClasses()}
+            className={cn(
+              'rounded-full bg-green-500 p-1.5 text-white outline-offset-4 transition-all duration-200 disabled:cursor-not-allowed disabled:text-text-secondary disabled:opacity-10',
+            )}
             data-testid="send-button"
             type="submit"
           >

@@ -6,6 +6,45 @@ import type { IconProps } from '~/common';
 import { useProviderIcon } from '~/hooks/Endpoint';
 import { cn } from '~/utils';
 
+type EndpointIcon = {
+  icon: React.ReactNode | React.JSX.Element;
+  bg?: string;
+  name?: string | null;
+};
+
+function getOpenAIColor(_model: string | null | undefined) {
+  const model = _model?.toLowerCase() ?? '';
+  if (model && (/\b(o\d)\b/i.test(model) || /\bgpt-[5-9](?:\.\d+)?\b/i.test(model))) {
+    return '#000000';
+  }
+  return model.includes('gpt-4') ? '#0050ff' : '#0a1128';
+}
+
+function getGoogleIcon(model: string | null | undefined, size: number) {
+  if (model?.toLowerCase().includes('code') === true) {
+    return <CodeyIcon size={size * 0.75} />;
+  } else if (/gemini|learnlm|gemma/.test(model?.toLowerCase() ?? '')) {
+    return <GeminiIcon size={size * 0.7} />;
+  } else {
+    return <PaLMIcon size={size * 0.7} />;
+  }
+}
+
+function getGoogleModelName(model: string | null | undefined) {
+  if (model?.toLowerCase().includes('code') === true) {
+    return 'Codey';
+  } else if (
+    model?.toLowerCase().includes('gemini') === true ||
+    model?.toLowerCase().includes('learnlm') === true
+  ) {
+    return 'Gemini';
+  } else if (model?.toLowerCase().includes('gemma') === true) {
+    return 'Gemma';
+  } else {
+    return 'PaLM2';
+  }
+}
+
 const MessageEndpointIcon: React.FC<IconProps> = (props) => {
   const {
     error,

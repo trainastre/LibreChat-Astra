@@ -1,0 +1,2289 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://kata.astrelya.local:8081/api",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/assignedKatas/updateResultIA/{id}": {
+      "put": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "updateResultIA",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultIA"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/resource/byStates": {
+      "post": {
+        "tags": [
+          "resource-controller"
+        ],
+        "operationId": "findResourcesByStates",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoondResponseResourcesArray"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/github": {
+      "post": {
+        "tags": [
+          "github-webhook-controller"
+        ],
+        "operationId": "action",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GHWebhookRun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate": {
+      "post": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "saveOne",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/upload/{id}": {
+      "post": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "uploadFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "data"
+                ],
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/boond": {
+      "post": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "searchOne",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoondResponseCandidatesArray"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/calendarPublic/install": {
+      "post": {
+        "tags": [
+          "calendar-public-controller"
+        ],
+        "operationId": "install",
+        "parameters": [
+          {
+            "name": "signedRequest",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppInstallResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boond/updateAction": {
+      "post": {
+        "tags": [
+          "boond-webhook-controller"
+        ],
+        "operationId": "handleUpdateAction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoondResponseWebhooks"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/boond/deleteAction": {
+      "post": {
+        "tags": [
+          "boond-webhook-controller"
+        ],
+        "operationId": "handleDeleteAction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoondResponseWebhooks"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/boond/createAction": {
+      "post": {
+        "tags": [
+          "boond-webhook-controller"
+        ],
+        "operationId": "handleCreateAction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoondResponseWebhooks"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assignedKatas/send": {
+      "post": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "saveOneAndSendMail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignedKata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/notify": {
+      "post": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "saveOneAndNotify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignedKata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/evaluateWithAgent/{id}": {
+      "post": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "evaluateWithAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/commit/{id}": {
+      "post": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "saveKata",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/add": {
+      "post": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "saveOne_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignedKata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/resource/socialNetworks": {
+      "get": {
+        "tags": [
+          "resource-controller"
+        ],
+        "operationId": "getSocialNetworks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoondResponseResourcesMediaReport"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/resource/report": {
+      "get": {
+        "tags": [
+          "resource-controller"
+        ],
+        "operationId": "getReport",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoondResponseResourcesReport"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/resource/all": {
+      "get": {
+        "tags": [
+          "resource-controller"
+        ],
+        "operationId": "findResources",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoondResponseResourcesArray"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/hello": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "hello",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign/download/{repo}/{branche}": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "feignDl",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branche",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign/commit/{repo}/{sha}": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "getCommit",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GHCommit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign/commit/last/{repo}/{branche}": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "getLastCommit",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branche",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GHBranche"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign/branch/{repo}/{branche}": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "getBranch",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branche",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GHBranche"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "feign",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GHResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/feign/{branche}": {
+      "get": {
+        "tags": [
+          "controller-test"
+        ],
+        "operationId": "feign_1",
+        "parameters": [
+          {
+            "name": "branche",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GHResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/{id}": {
+      "get": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/toResources": {
+      "get": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "updateToResources",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/downloadFile/{id}": {
+      "get": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "downloadFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/check/{id}": {
+      "get": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "checkAK",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/KataInfoDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/candidate/all": {
+      "get": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CandidateDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/calendarPublic/configure": {
+      "get": {
+        "tags": [
+          "calendar-public-controller"
+        ],
+        "operationId": "configure",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/calendarPublic/all": {
+      "get": {
+        "tags": [
+          "calendar-public-controller"
+        ],
+        "operationId": "findAll_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedKata"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calendarPublic/all/{startDate}/{endDate}": {
+      "get": {
+        "tags": [
+          "calendar-public-controller"
+        ],
+        "operationId": "findAll_2",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedKata"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assignedKatas/statistics": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "getStats",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/refresh/{id}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "refreshBuild",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/recoverIA/{id}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "recoverIA",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedKata"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/getResultIA/{id}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "getResultIA",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/download/{repo}/{branche}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "getCode",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branche",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/candidate/{id}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "findAllForCandidate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedKata"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/all": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "findAll_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedKata"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/assignedKatas/all/{startDate}/{endDate}": {
+      "get": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "findAll_4",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedKata"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    },
+    "/calendarPublic/uninstall": {
+      "delete": {
+        "tags": [
+          "calendar-public-controller"
+        ],
+        "operationId": "uninstall",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assignedKatas/delete/{id}": {
+      "delete": {
+        "tags": [
+          "assign-kata-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "Bearer Authentication": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Recommendation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recommendation": {
+            "type": "string",
+            "enum": [
+              "PROFIL",
+              "MISSION",
+              "ENTRETIEN",
+              "KO"
+            ]
+          }
+        }
+      },
+      "ResultIA": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recommendation": {
+            "$ref": "#/components/schemas/Recommendation"
+          },
+          "language": {
+            "type": "string"
+          },
+          "languageGradeIa": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string"
+          },
+          "codeGradeIa": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string"
+          },
+          "modelGradeIa": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "logic": {
+            "type": "string"
+          },
+          "logicGradeIa": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "artisticGradeIa": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "globalNote": {
+            "type": "string"
+          }
+        }
+      },
+      "BoondResponseResourcesArray": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "firstMissionDate": {
+            "type": "string"
+          },
+          "nbPresClient": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boondResourceId": {
+            "type": "string"
+          }
+        }
+      },
+      "GHRun": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "conclusion": {
+            "type": "string"
+          },
+          "head_branch": {
+            "type": "string"
+          }
+        }
+      },
+      "GHWebhookRun": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "workflow_run": {
+            "$ref": "#/components/schemas/GHRun"
+          }
+        }
+      },
+      "CandidateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cvPath": {
+            "type": "string"
+          },
+          "xp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/UserDto"
+          },
+          "boondCandidateId": {
+            "type": "string"
+          },
+          "boondResourceId": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "githubUsername": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nameFr": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          }
+        }
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nameFr": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "phoneCode": {
+            "type": "string"
+          },
+          "isoCode": {
+            "type": "string",
+            "enum": [
+              "FR",
+              "CH"
+            ]
+          }
+        }
+      },
+      "Desk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "city": {
+            "$ref": "#/components/schemas/City"
+          },
+          "address": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "desk": {
+            "$ref": "#/components/schemas/Desk"
+          },
+          "clientToken": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "BoondResponseCandidatesArray": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "xp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string"
+          },
+          "boondCandidateId": {
+            "type": "string"
+          }
+        }
+      },
+      "AppInstallResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BoondResponseWebhooks": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/BoondResponseWebhooksData"
+          }
+        }
+      },
+      "BoondResponseWebhooksData": {
+        "type": "object",
+        "properties": {
+          "relationships": {
+            "$ref": "#/components/schemas/BoondResponseWebhooksDataRelationships"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/BoondResponseWebhooksDataAttributes"
+          }
+        }
+      },
+      "BoondResponseWebhooksDataAttributes": {
+        "type": "object",
+        "properties": {
+          "userToken": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "BoondResponseWebhooksDataRelationships": {
+        "type": "object",
+        "properties": {
+          "log": {
+            "$ref": "#/components/schemas/BoondResponseWebhooksDataRelationshipsLog"
+          }
+        }
+      },
+      "BoondResponseWebhooksDataRelationshipsLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "AssignedKata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/User"
+          },
+          "savior": {
+            "$ref": "#/components/schemas/User"
+          },
+          "kata": {
+            "$ref": "#/components/schemas/Kata"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/Candidate"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "corrector": {
+            "$ref": "#/components/schemas/User"
+          },
+          "grade": {
+            "$ref": "#/components/schemas/Grade"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "saved": {
+            "type": "boolean"
+          },
+          "build": {
+            "type": "string"
+          },
+          "branche": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/Result"
+          },
+          "resultIA": {
+            "$ref": "#/components/schemas/ResultIA"
+          },
+          "actionId": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "server": {
+            "$ref": "#/components/schemas/Server"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Candidate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "boondResourceId": {
+            "type": "string"
+          },
+          "cvPath": {
+            "type": "string"
+          },
+          "xp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "creator": {
+            "$ref": "#/components/schemas/User"
+          },
+          "boondCandidateId": {
+            "type": "string"
+          },
+          "githubUsername": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "Grade": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grade": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "OK_CONSIDERING_PROFILE",
+              "AVERAGE",
+              "KO",
+              "ABANDONNED"
+            ]
+          }
+        }
+      },
+      "Kata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lang": {
+            "type": "string"
+          },
+          "difficulty": {
+            "type": "string"
+          },
+          "time": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "script": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "repo": {
+            "type": "string"
+          },
+          "checkable": {
+            "type": "boolean"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "defaultBranch": {
+            "type": "string"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "recommendation": {
+            "$ref": "#/components/schemas/Recommendation"
+          },
+          "language": {
+            "type": "string"
+          },
+          "languageGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string"
+          },
+          "codeGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string"
+          },
+          "modelGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "logic": {
+            "type": "string"
+          },
+          "logicGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "artisticGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "timeGrade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "globalNote": {
+            "type": "string"
+          }
+        }
+      },
+      "Server": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "myrtilleHost": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "boondResourceId": {
+            "type": "string"
+          },
+          "corrector": {
+            "type": "boolean"
+          },
+          "desk": {
+            "$ref": "#/components/schemas/Desk"
+          },
+          "clienttoken": {
+            "type": "string"
+          }
+        }
+      },
+      "BoondResponseResourcesMediaReport": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "socialNetworks": {
+            "type": "string"
+          }
+        }
+      },
+      "BoondResponseResourcesReport": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "kata": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ratioPositionnement": {
+            "type": "string"
+          },
+          "firstMissionDate": {
+            "type": "string"
+          }
+        }
+      },
+      "GHCommit": {
+        "type": "object",
+        "properties": {
+          "sha": {
+            "type": "string"
+          },
+          "commit": {
+            "$ref": "#/components/schemas/GHCommitInfo"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/GHCommitStats"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GHFile"
+            }
+          }
+        }
+      },
+      "GHCommitInfo": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "author": {
+            "$ref": "#/components/schemas/GHUser"
+          },
+          "committer": {
+            "$ref": "#/components/schemas/GHUser"
+          }
+        }
+      },
+      "GHCommitStats": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "additions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "deletions": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "GHFile": {
+        "type": "object",
+        "properties": {
+          "sha": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "additions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "deletions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "patch": {
+            "type": "string"
+          }
+        }
+      },
+      "GHUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GHBranche": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "commit": {
+            "$ref": "#/components/schemas/GHCommit"
+          }
+        }
+      },
+      "GHResponse": {
+        "type": "object",
+        "properties": {
+          "lastResult": {
+            "type": "string",
+            "enum": [
+              "SUCCESS",
+              "FAIL",
+              "ABANDONNED",
+              "NONE",
+              "NOT_CHECKABLE"
+            ]
+          },
+          "total_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "workflow_runs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GHRun"
+            }
+          }
+        }
+      },
+      "KataInfoDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "myrtilleHost": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "git": {
+            "type": "boolean"
+          },
+          "now": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer Authentication": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

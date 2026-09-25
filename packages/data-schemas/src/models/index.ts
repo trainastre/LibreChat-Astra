@@ -8,6 +8,7 @@ import { createAgentTriggerUserPurgeModel } from './triggerUserPurge';
 import { createRefreshTokenBridgeModel } from './refreshTokenBridge';
 import { createAgentTriggerDeliveryModel } from './triggerDelivery';
 import { createSkillSyncStatusModel } from './skillSyncStatus';
+import { createFeedbackModel } from './feedback';
 import { createConversationTagModel } from './conversationTag';
 import { createCodeEnvironmentModel } from './codeEnvironment';
 import { createAgentCategoryModel } from './agentCategory';
@@ -88,17 +89,9 @@ export function createModels(mongoose: typeof import('mongoose')): {
   AuditLog: ReturnType<typeof createAuditLogModel>;
   Group: ReturnType<typeof createGroupModel>;
   Config: ReturnType<typeof createConfigModel>;
-  AgentTriggerDelivery: ReturnType<typeof createAgentTriggerDeliveryModel>;
-  AgentTriggerLaneSequence: ReturnType<typeof createAgentTriggerLaneSequenceModel>;
-  AgentTriggerUserPurge: ReturnType<typeof createAgentTriggerUserPurgeModel>;
-  AgentQueuedTurn: ReturnType<typeof createAgentQueuedTurnModel>;
-  AgentQueuedTurnSequence: ReturnType<typeof createAgentQueuedTurnSequenceModel>;
-  Schedule: ReturnType<typeof createScheduleModel>;
-  ScheduleRun: ReturnType<typeof createScheduleRunModel>;
-  RefreshTokenBridge: ReturnType<typeof createRefreshTokenBridgeModel>;
-  OpenIDRefreshFlight: ReturnType<typeof createOpenIDRefreshFlightModel>;
+  Feedback: ReturnType<typeof createFeedbackModel>;
 } {
-  const models = {
+  return {
     User: createUserModel(mongoose),
     Token: createTokenModel(mongoose),
     Session: createSessionModel(mongoose),
@@ -137,34 +130,6 @@ export function createModels(mongoose: typeof import('mongoose')): {
     AuditLog: createAuditLogModel(mongoose),
     Group: createGroupModel(mongoose),
     Config: createConfigModel(mongoose),
-    AgentTriggerDelivery: createAgentTriggerDeliveryModel(mongoose),
-    AgentTriggerLaneSequence: createAgentTriggerLaneSequenceModel(mongoose),
-    AgentTriggerUserPurge: createAgentTriggerUserPurgeModel(mongoose),
-    AgentQueuedTurn: createAgentQueuedTurnModel(mongoose),
-    AgentQueuedTurnSequence: createAgentQueuedTurnSequenceModel(mongoose),
-    Schedule: createScheduleModel(mongoose),
-    ScheduleRun: createScheduleRunModel(mongoose),
-    RefreshTokenBridge: createRefreshTokenBridgeModel(mongoose),
-    OpenIDRefreshFlight: createOpenIDRefreshFlightModel(mongoose),
+    Feedback: createFeedbackModel(mongoose),
   };
-  /**
-   * Background index builds fail silently unless an 'index' listener is
-   * attached (e.g. Amazon DocumentDB <5.0 rejecting partialFilterExpression),
-   * leaving unique constraints unenforced with no trace in the logs.
-   */
-  for (const model of Object.values(models)) {
-    if (model.listenerCount('index') === 0) {
-      model.on('index', (error?: Error) => {
-        if (error) {
-          logger.error(`Index build failed for "${model.modelName}": ${error.message}`);
-          // eslint-disable-next-line no-restricted-syntax -- Collection name metadata only, no raw driver operations.
-          const hint = getTenantIndexMigrationHint(model.collection.collectionName, error);
-          if (hint) {
-            logger.warn(hint);
-          }
-        }
-      });
-    }
-  }
-  return models;
 }

@@ -1,5 +1,7 @@
 import { SettingsTabValues } from 'librechat-data-provider';
 import type { SettingEntry } from './types';
+import { useSetRecoilState } from 'recoil';
+import { showTutorialAtom } from '~/store';
 import {
   TextToSpeechSwitch,
   VoiceDropdown,
@@ -47,14 +49,32 @@ import { showThinkingAtom } from '~/store/showThinking';
 import ProviderKeys from '../SettingsTabs/ProviderKeys';
 import { autoScrollAtom } from '~/store/autoScroll';
 import Avatar from '../SettingsTabs/Account/Avatar';
-import CodeEnvironments from './CodeEnvironments';
+import { AdminFeedbacksTab } from '~/components/Feedback';
 import About from '../SettingsTabs/About/About';
 import ApiKeys from '../SettingsTabs/ApiKeys';
 import MemoryToggle from './MemoryToggle';
 import { TTSEndpoints } from '~/common';
+import { useLocalize } from '~/hooks';
 import store from '~/store';
 
-const { GENERAL, CHAT, SPEECH, DATA, ACCOUNT, ABOUT } = SettingsTabValues;
+const { GENERAL, CHAT, SPEECH, DATA, ACCOUNT, ABOUT, ADMIN_FEEDBACK } = SettingsTabValues;
+
+function ReplayTutorialButton() {
+  const localize = useLocalize();
+  const setShowTutorial = useSetRecoilState(showTutorialAtom);
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-sm text-text-primary">{localize('com_tutorial_replay_label')}</span>
+      <button
+        type="button"
+        onClick={() => setShowTutorial(true)}
+        className="rounded-lg border border-border-heavy px-3 py-1.5 text-sm text-text-primary hover:bg-surface-active focus:outline-none focus:ring-1 focus:ring-border-xheavy"
+      >
+        {localize('com_tutorial_replay_button')}
+      </button>
+    </div>
+  );
+}
 
 export const registry: SettingEntry[] = [
   // General · Appearance
@@ -181,15 +201,14 @@ export const registry: SettingEntry[] = [
       switchId: 'keepScreenAwake',
     }),
   },
-  // General · Admin
+  // General · Tutorial
   {
-    id: 'adminPanel',
+    id: 'replayTutorial',
     tab: GENERAL,
-    section: 'admin',
-    labelKey: 'com_ui_admin_panel',
-    keywords: ['admin', 'panel', 'dashboard'],
-    Component: AdminPanel,
-    show: (ctx) => ctx.adminPanelURL !== '',
+    section: 'tutorial',
+    labelKey: 'com_tutorial_replay_label',
+    keywords: ['tutorial', 'guide', 'onboarding', 'mcp', 'help'],
+    Component: ReplayTutorialButton,
   },
 
   // Chat · Sending
@@ -762,5 +781,15 @@ export const registry: SettingEntry[] = [
     keywords: ['version', 'build', 'diagnostics'],
     show: (ctx) => ctx.aboutEnabled,
     Component: About,
+  },
+
+  // Admin Feedbacks
+  {
+    id: 'admin-feedbacks',
+    tab: ADMIN_FEEDBACK,
+    section: 'feedbacks',
+    labelKey: 'com_nav_setting_admin_feedback',
+    show: (ctx) => ctx.isAdmin,
+    Component: AdminFeedbacksTab,
   },
 ];

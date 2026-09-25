@@ -6,148 +6,121 @@
   scroll-margin-top: 4rem;
 }
 
+/* ===== Charte graphique : polices =====
+   Style aligné sur astrelya.com : une seule famille sans-serif (Inter),
+   les titres se distinguent par la graisse (bold/extrabold), pas par une serif.
+   Inter est déjà servie localement plus bas dans ce fichier ($fonts/Inter-*.woff2). */
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 /* Custom Variables */
 :root {
-  --white: 255 255 255;
-  --black: 0 0 0;
-  --gray-20: 236 236 241;
-  --gray-50: 247 247 248;
-  --gray-100: 236 236 236;
-  --gray-200: 227 227 227;
-  --gray-300: 205 205 205;
-  --gray-400: 153 150 150;
-  --gray-500: 89 89 89;
-  --gray-600: 66 66 66;
-  --gray-650: 57 57 57;
-  --gray-700: 47 47 47;
-  --gray-800: 33 33 33;
-  --gray-850: 23 23 23;
-  --gray-875: 18 18 18;
-  --gray-900: 13 13 13;
-  --green-50: 236 253 245;
-  --green-100: 209 250 229;
-  --green-200: 167 243 208;
-  --green-300: 110 231 183;
-  --green-400: 52 211 153;
-  --green-500: 16 185 129;
-  --green-600: 5 150 105;
-  --green-700: 4 120 87;
-  --green-800: 6 95 70;
-  --green-900: 6 78 59;
-  --green-950: 2 44 34;
-  --red-50: 254 242 242;
-  --red-100: 254 226 226;
-  --red-200: 254 202 202;
-  --red-300: 252 165 165;
-  --red-400: 248 113 113;
-  --red-500: 239 68 68;
-  --red-600: 220 38 38;
-  --red-700: 185 28 28;
-  --red-800: 153 27 27;
-  --red-900: 127 29 29;
-  --red-950: 69 10 10;
-  --amber-50: 255 251 235;
-  --amber-100: 254 243 199;
-  --amber-200: 253 230 138;
-  --amber-300: 252 211 77;
-  --amber-400: 251 191 36;
-  --amber-500: 245 158 11;
-  --amber-600: 217 119 6;
-  --amber-700: 180 83 9;
-  --amber-800: 146 64 14;
-  --amber-900: 120 53 15;
-  --amber-950: 69 26 3;
-  --blue-50: 239 246 255;
-  --blue-100: 219 234 254;
-  --blue-200: 191 219 254;
-  --blue-300: 147 197 253;
-  --blue-400: 96 165 250;
-  --blue-500: 59 130 246;
-  --blue-600: 37 99 235;
-  --blue-700: 29 78 216;
-  --blue-800: 30 64 175;
-  --blue-900: 30 58 138;
-  --blue-950: 23 37 84;
-  --brand-purple: 126 34 206;
-  --gizmo-gray-500: 153 153 153;
-  --gizmo-gray-600: 102 102 102;
-  --gizmo-gray-950: 15 15 15;
+  --white: #fff;
+  --black: #000;
+  --gray-20: #ececf1;
+  --gray-50: #f8f9fa;
+  --gray-100: #e9ecef;
+  --gray-200: #e3e3e3;
+  --gray-300: #cdcdcd;
+  --gray-400: #999696;
+  --gray-500: #595959;
+  --gray-600: #424242;
+  --gray-700: #2f2f2f;
+  --gray-800: #1a1a1a;
+  --gray-850: #171717;
+  --gray-900: #0d0d0d;
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-300: #6ee7b7;
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #047857;
+  --green-800: #065f46;
+  --green-900: #064e3b;
+  --green-950: #022c22;
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --red-800: #991b1b;
+  --red-900: #7f1d1d;
+  --red-950: #450a0a;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
+  --amber-950: #451a03;
+  --brand-purple: var(--charter-blue); /* ex #ab68ff */
+  --gizmo-gray-500: #999;
+  --gizmo-gray-600: #666;
+  --gizmo-gray-950: #0f0f0f;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
   --markdown-font-size: 1rem;
-}
 
-/* transitions-dev tokens — semantic names shared by every t-* class below. */
-:root {
-  --resize-dur: 300ms;
-  --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --icon-swap-dur: 200ms;
-  --icon-swap-blur: 2px;
-  --icon-swap-start-scale: 0.25;
-  --icon-swap-ease: ease-in-out;
-  --avatar-lift: -3px;
-  --avatar-dur: 280ms;
-  --avatar-scale: 1.04;
-  --avatar-falloff: 0.45;
-  --avatar-ease-in: cubic-bezier(0.22, 1, 0.36, 1);
-  --avatar-ease-out: cubic-bezier(0.34, 3.85, 0.64, 1);
+  /* ===== Charte graphique ===== */
+  --charter-navy: #0a1128; /* bleu marine très foncé : nav, boutons (proche astrelya.com) */
+  --charter-blue: #0050ff; /* bleu vif signature : accents, icônes, liens */
+  --charter-dark: #1a1a1a;
+  --charter-dark-alt: #212529;
+  --charter-white: #ffffff;
+  --charter-gray-light: #f8f9fa;
+  --charter-gray-light-alt: #e9ecef;
+  --font-heading:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  --font-body:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
-
-/* Icon swap — cross-fade two icons sharing a slot. */
-.t-icon-swap {
-  position: relative;
-  display: inline-grid;
-}
-.t-icon-swap .t-icon {
-  grid-area: 1 / 1;
-  transition:
-    opacity var(--icon-swap-dur) var(--icon-swap-ease),
-    filter var(--icon-swap-dur) var(--icon-swap-ease),
-    transform var(--icon-swap-dur) var(--icon-swap-ease);
-  will-change: opacity, filter, transform;
-}
-.t-icon-swap[data-state='a'] .t-icon[data-icon='a'],
-.t-icon-swap[data-state='b'] .t-icon[data-icon='b'] {
-  opacity: 1;
-  filter: blur(0);
-  transform: scale(1);
-}
-.t-icon-swap[data-state='a'] .t-icon[data-icon='b'],
-.t-icon-swap[data-state='b'] .t-icon[data-icon='a'] {
-  opacity: 0;
-  filter: blur(var(--icon-swap-blur));
-  transform: scale(var(--icon-swap-start-scale));
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .t-icon-swap .t-icon {
-    transition: none !important;
-  }
-}
-
-/* Avatar group hover — distance-falloff lift on a horizontal row. */
-.t-avatar {
-  transform-origin: center;
-  transform: translateY(var(--shift, 0px)) scale(var(--scale-active, 1));
-  transition:
-    transform var(--avatar-dur) var(--avatar-ease-in),
-    background-color 150ms ease,
-    color 150ms ease,
-    border-color 150ms ease;
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .t-avatar {
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
 html {
-  --brand-purple: 126 34 206;
+  --brand-purple: var(--charter-blue); /* ex #ab68ff */
   --presentation: var(--white);
   --text-primary: var(--gray-800);
   --text-secondary: var(--gray-600);
@@ -164,9 +137,9 @@ html {
   --accent-primary: 18 110 107;
   --accent-primary-hover: 10 79 83;
   --ring-primary: var(--gray-500);
-  --header-primary: var(--white);
-  --header-hover: var(--gray-50);
-  --header-button-hover: var(--gray-50);
+  --header-primary: var(--charter-navy); /* nav marine, comme astrelya.com */
+  --header-hover: #141c3f; /* marine légèrement éclairci au survol */
+  --header-button-hover: #141c3f;
   --surface-active: var(--gray-100);
   --surface-active-alt: var(--gray-200);
   --surface-hover: var(--gray-200);
@@ -182,72 +155,40 @@ html {
   --surface-tertiary: var(--gray-100);
   --surface-tertiary-alt: var(--white);
   --surface-dialog: var(--white);
-  --surface-overlay: var(--gray-500);
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --surface-submit: var(--charter-navy);
+  --surface-submit-hover: var(--header-hover);
   --surface-destructive: var(--red-700);
   --surface-destructive-hover: var(--red-800);
   --surface-chat: var(--white);
-  --surface-code: var(--surface-primary-alt);
-  --surface-qr: var(--white);
-  --border-light: var(--gray-200);
-  --border-light-alpha: 1;
-  --border-medium-alt: var(--gray-300);
-  --border-medium: var(--gray-300);
-  --border-medium-alpha: 1;
+  --border-light: #e0e7ff;
+  --border-medium-alt: #dce7ff;
+  --border-medium: #dce7ff;
   --border-heavy: var(--gray-400);
   --border-heavy-alpha: 1;
   --border-xheavy: var(--gray-500);
   --border-xheavy-alpha: 1;
   --border-destructive: var(--red-600);
-  --status-success: var(--green-700);
-  --status-success-subtle: var(--green-50);
-  --status-success-border: var(--green-300);
-  --status-success-strong: 2 133 94;
-  --status-info: var(--blue-600);
-  --status-info-subtle: var(--blue-50);
-  --status-info-border: var(--blue-300);
-  --status-info-strong: var(--gray-500);
-  --status-warning: var(--amber-700);
-  --status-warning-subtle: var(--amber-50);
-  --status-warning-border: var(--amber-300);
-  --status-warning-strong: 199 82 9;
-  --status-error: var(--red-700);
-  --status-error-subtle: var(--red-50);
-  --status-error-border: var(--red-300);
-  --status-error-strong: 224 47 31;
-  --status-neutral: var(--gray-600);
-  --status-neutral-subtle: var(--gray-100);
-  --status-neutral-border: var(--gray-300);
-  --status-verified: 37 99 235;
-  --text-on-status: var(--white);
+  /* These are test styles */
 
-  /* Categorical series scale — slot order is the CVD-safety mechanism */
-  --series-1: 5 110 189;
-  --series-2: 233 86 13;
-  --series-3: 0 148 142;
-  --series-4: 182 123 5;
-  --series-5: 216 90 142;
-  --series-6: 126 35 205;
-  --series-7: 1 131 1;
-  --series-8: 63 81 181;
-
-  /* Code syntax highlighting */
-  --syntax-text: var(--gray-800);
-  --syntax-comment: var(--gray-500);
-  --syntax-meta: var(--gray-600);
-  --syntax-builtin: 154 103 0;
-  --syntax-keyword: 5 80 174;
-  --syntax-string: 10 123 98;
-  --syntax-attr: 154 47 106;
-  --syntax-title: 180 35 24;
-
-  --surface-inverted: var(--gray-850);
-  --surface-inverted-hover: var(--gray-700);
-  --text-inverted: var(--white);
-  --surface-fixed: var(--white);
-  --surface-fixed-hover: var(--gray-100);
-  --text-fixed: var(--gray-800);
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100% / 0.85; /* Translucidité pour le glassmorphism */
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 0 0% 3.9%;
   --radius: 0.5rem;
   --theme-control-radius: 0.75rem;
   --theme-round-control-radius: 9999px;
@@ -270,7 +211,7 @@ html {
   --provider-foreground: #ffffff;
 }
 .dark {
-  --brand-purple: 171 104 255;
+  --brand-purple: var(--charter-blue); /* ex #ab68ff */
   --presentation: var(--gray-800);
   --text-primary: var(--gray-100);
   --text-secondary: var(--gray-300);
@@ -305,10 +246,9 @@ html {
   --surface-secondary-alt: var(--gray-800);
   --surface-tertiary: var(--gray-700);
   --surface-tertiary-alt: var(--gray-700);
-  --surface-dialog: var(--gray-875);
-  --surface-overlay: 0 0 0;
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --surface-dialog: var(--gray-850);
+  --surface-submit: var(--charter-navy);
+  --surface-submit-hover: var(--header-hover);
   --surface-destructive: var(--red-800);
   --surface-destructive-hover: var(--red-900);
   --surface-chat: var(--gray-700);
@@ -320,63 +260,33 @@ html {
   --border-heavy: var(--gray-500);
   --border-xheavy: var(--gray-400);
   --border-destructive: var(--red-500);
-  --status-success: var(--green-300);
-  --status-success-subtle: var(--green-950);
-  --status-success-border: var(--green-800);
-  --status-success-strong: 8 135 89;
-  --status-info: var(--blue-300);
-  --status-info-subtle: var(--blue-950);
-  --status-info-border: var(--blue-800);
-  --status-info-strong: var(--gray-600);
-  --status-warning: var(--amber-300);
-  --status-warning-subtle: var(--amber-950);
-  --status-warning-border: var(--amber-800);
-  --status-warning-strong: var(--amber-800);
-  --status-error: var(--red-300);
-  --status-error-subtle: var(--red-950);
-  --status-error-border: var(--red-800);
-  --status-error-strong: var(--red-800);
-  --status-neutral: var(--gray-300);
-  --status-neutral-subtle: var(--gray-800);
-  --status-neutral-border: var(--gray-700);
-  --status-verified: 26 127 216;
-  --text-on-status: var(--white);
+  /* These are test styles */
 
-  /* Categorical series scale — same hues, stepped for the dark surface */
-  --series-1: 9 140 238;
-  --series-2: 217 87 35;
-  --series-3: 6 158 152;
-  --series-4: 200 133 12;
-  --series-5: 213 82 130;
-  --series-6: 171 104 254;
-  --series-7: 80 167 49;
-  --series-8: 120 130 190;
-
-  /* Code syntax highlighting. Comment and meta are the flattened equivalents of
-     the 50% and 60% alpha whites this palette used before it was tokenized. */
-  --syntax-text: var(--white);
-  --syntax-comment: 144 144 144;
-  --syntax-meta: 166 166 166;
-  --syntax-builtin: 233 149 12;
-  --syntax-keyword: 46 149 211;
-  --syntax-string: 0 166 125;
-  --syntax-attr: 223 48 121;
-  --syntax-title: 242 44 61;
-
-  --surface-inverted: var(--white);
-  --surface-inverted-hover: var(--gray-100);
-  --text-inverted: var(--gray-850);
-  --surface-fixed: var(--white);
-  --surface-fixed-hover: var(--gray-100);
-  --text-fixed: var(--gray-800);
-  --switch-unchecked: 102 102 102;
-  --provider-openai: #19c37d;
-  --provider-openai-gpt4: #ab68ff;
-  --provider-openai-reasoning: #000000;
-  --provider-anthropic: #d09a74;
-  --provider-azure: linear-gradient(0.375turn, #61bde2, #4389d0);
-  --provider-bedrock: #268672;
-  --provider-foreground: #ffffff;
+  --background: 0 0% 7%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 12% / 0.85; /* Translucidité pour le glassmorphism */
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 40.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 0 0% 83.1%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+  --switch-unchecked: 0 0% 40%;
 }
 .gizmo {
   --text-primary: var(--gizmo-gray-950);
@@ -407,159 +317,83 @@ html {
   --chart-widget-stroke: 50 50 50; /* Click UI dashboards.chartWidget.color.stroke.default #323232 */
   --surface-secondary: var(--gray-800);
   --surface-tertiary: var(--gray-700);
-  --border-light: 217 217 227;
-  --border-medium: 217 217 227;
-  --border-heavy: 217 217 227;
-  --border-xheavy: 217 217 227;
+  --border-light: rgba(217, 217, 227, 0.1);
+  --border-medium: rgba(217, 217, 227, 0.15);
+  --border-heavy: rgba(217, 217, 227, 0.2);
+  --border-xheavy: rgba(217, 217, 227, 0.25);
 }
 
-/* High contrast appearance modes.
- *
- * Every `IThemeRGB` token is delivered by the theme registry as an inline custom
- * property on <html> (see packages/client/src/theme/themes/highContrast.ts), so
- * this block only covers what the token layer cannot reach: the CSS-only
- * variables and hard-coded literals elsewhere in this stylesheet. Every ratio
- * quoted below is measured against the mode's own canvas, pure white or pure
- * black. */
-html.high-contrast {
-  /* A 0.5rem bar is a small target to hit and a thin thing to see. */
-  --scrollbar-size: 0.75rem;
-  /* Keep both animated text stops at the AAA ratios declared by the palette. */
-  --shimmer-base-alpha: 1;
-  --shimmer-dip-alpha: 1;
+/* === Thème Astrelya : Barre Latérale Premium (Apple Style) === */
+.sidebar-astrelya {
+  /* Dégradé radial subtil pour le fond de la barre latérale */
+  background: radial-gradient(120% 120% at 50% 10%, #0d1b42 0%, var(--charter-navy) 100%) !important;
+  --surface-primary-alt: transparent; /* override pour laisser voir le dégradé */
+  --surface-secondary: transparent;
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --surface-active-alt: rgba(255, 255, 255, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: #e9ecef;
+  --text-secondary-alt: #cdcdcd;
+  --border-light: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --accent: #0050ff;
+  --accent-foreground: #ffffff;
+  --background: 226 60% 10%;
+  --foreground: 0 0% 100%;
+  --input: 226 60% 15%;
+  --ring: 224 76% 48%;
 }
-html.high-contrast ::-webkit-scrollbar-thumb {
-  /* The 10%-alpha thumb is invisible against a pure black or white canvas. */
-  background-color: rgb(var(--border-heavy));
+
+/* Micro-animations globales pour tous les éléments interactifs */
+button, a, input, select, textarea, [role="button"], [role="menuitem"], [role="combobox"] {
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-html.high-contrast ::-webkit-scrollbar-track {
-  border: 1px solid rgb(var(--border-light));
+
+button:active, [role="button"]:active {
+  transform: scale(0.97);
 }
-html.high-contrast * {
-  scrollbar-color: rgb(var(--border-heavy)) rgb(var(--surface-primary));
-  /* Controls that halve their own ring (`ring-opacity-50`, `ring-opacity-20`)
-   * keep it at full strength here. The outline rules below cover the controls
-   * that blank it outright. */
-  --tw-ring-opacity: 1;
+
+.sidebar-astrelya input:focus,
+.sidebar-astrelya textarea:focus,
+.sidebar-astrelya select:focus {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05) !important;
 }
-/* `.dark body`/`.dark html` pin the page to #212121, which would leave a
- * near-black canvas behind the pure black surfaces. */
-html.high-contrast,
-html.high-contrast body,
-html.high-contrast.dark,
-html.high-contrast.dark body {
-  background-color: rgb(var(--surface-primary));
+
+.sidebar-astrelya input:hover,
+.sidebar-astrelya textarea:hover,
+.sidebar-astrelya select:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
-/* Selection is otherwise left to the UA's system colours, which no theme
- * controls. Inverting the canvas guarantees 21:1 for the selected run. */
-html.high-contrast ::selection {
-  background-color: rgb(var(--text-primary));
-  color: rgb(var(--surface-primary));
+
+.sidebar-astrelya,
+.sidebar-astrelya * {
+  color: rgba(255, 255, 255, 0.85);
 }
-/* WCAG 2.4.13 wants a 2px perimeter as the floor; a contrast mode should exceed
- * it. The global pair below hard-codes #000/#fff instead of reading the ink
- * token, and the keyboard-modality rule for text fields sits at 2px. */
-html.high-contrast :focus-visible,
-html.high-contrast.dark :focus-visible {
-  outline: 3px solid rgb(var(--text-primary));
-  outline-offset: 2px;
+
+.sidebar-astrelya input,
+.sidebar-astrelya textarea,
+.sidebar-astrelya select,
+.sidebar-astrelya button,
+.sidebar-astrelya [role="combobox"],
+.sidebar-astrelya [role="button"],
+.sidebar-astrelya [role="option"],
+.sidebar-astrelya [role="menuitem"] {
+  color: rgba(255, 255, 255, 0.75) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border-radius: 8px; /* Plus arrondi (Apple style) */
 }
-/* Selection perimeters and placeholder ink used to live here, but they complete
- * the exported palettes rather than this app: a package primitive rendered by
- * an external consumer of `ThemeProvider` needs them too, and the published
- * stylesheet is built only from package-owned CSS. They now ship from
- * `packages/client/src/theme/highContrast.css`, which `main.jsx` pulls in with
- * `@librechat/client/style.css`. What stays below is genuinely SPA-only. */
-html[data-input-modality='keyboard'].high-contrast
-  :where(
-    input:not([type]),
-    input:is(
-      [type='text'],
-      [type='search'],
-      [type='email'],
-      [type='password'],
-      [type='url'],
-      [type='tel'],
-      [type='number'],
-      [type='date'],
-      [type='datetime-local'],
-      [type='month'],
-      [type='week'],
-      [type='time']
-    ),
-    textarea
-  ):not(.lc-field):focus-visible {
-  outline: 3px solid rgb(var(--text-primary)) !important;
-  outline-offset: 2px !important;
-}
-/* The WCAG 1.4.1 link treatment moved to
- * `packages/client/src/theme/highContrast.css` with the other rules that
- * complete the exported palettes: `text-link` is a shared role, so a package
- * primitive rendering a link needs the same non-colour cue. */
-/* The whole `@tailwindcss/typography` variable block is hard-coded hex, and
- * message content carries `prose dark:prose-invert`, so the invert half is what
- * dark mode reads. Both halves are remapped: the light set puts prose links at
- * #0066cc, which is 3.77:1 on a black canvas and 5.40:1 on a white one, and
- * every rule and border in the set (#cdcdcd, #e5e7eb, #424242, #4b5563) sits
- * below the 3:1 non-text floor in one mode or the other. */
-html.high-contrast .prose {
-  --tw-prose-body: rgb(var(--text-primary));
-  --tw-prose-headings: rgb(var(--text-primary));
-  --tw-prose-lead: rgb(var(--text-primary));
-  --tw-prose-links: rgb(var(--link));
-  --tw-prose-bold: rgb(var(--text-primary));
-  --tw-prose-counters: rgb(var(--text-primary));
-  --tw-prose-bullets: rgb(var(--text-primary));
-  --tw-prose-hr: rgb(var(--border-medium));
-  --tw-prose-quotes: rgb(var(--text-primary));
-  --tw-prose-quote-borders: rgb(var(--border-medium));
-  --tw-prose-captions: rgb(var(--text-primary));
-  --tw-prose-code: rgb(var(--text-primary));
-  --tw-prose-pre-code: rgb(var(--text-primary));
-  --tw-prose-pre-bg: rgb(var(--surface-code));
-  --tw-prose-th-borders: rgb(var(--border-medium));
-  --tw-prose-td-borders: rgb(var(--border-medium));
-  --tw-prose-invert-body: rgb(var(--text-primary));
-  --tw-prose-invert-headings: rgb(var(--text-primary));
-  --tw-prose-invert-lead: rgb(var(--text-primary));
-  --tw-prose-invert-links: rgb(var(--link));
-  --tw-prose-invert-bold: rgb(var(--text-primary));
-  --tw-prose-invert-counters: rgb(var(--text-primary));
-  --tw-prose-invert-bullets: rgb(var(--text-primary));
-  --tw-prose-invert-hr: rgb(var(--border-medium));
-  --tw-prose-invert-quotes: rgb(var(--text-primary));
-  --tw-prose-invert-quote-borders: rgb(var(--border-medium));
-  --tw-prose-invert-captions: rgb(var(--text-primary));
-  --tw-prose-invert-code: rgb(var(--text-primary));
-  --tw-prose-invert-pre-code: rgb(var(--text-primary));
-  --tw-prose-invert-pre-bg: rgb(var(--surface-code));
-  --tw-prose-invert-th-borders: rgb(var(--border-medium));
-  --tw-prose-invert-td-borders: rgb(var(--border-medium));
-}
-/* Markdown structure borders are drawn from the raw grey palette, which lands
- * at 1.6:1 on white and 2.1:1 on black, under the 3:1 non-text floor. */
-html.high-contrast .markdown blockquote,
-html.high-contrast .markdown th,
-html.high-contrast .markdown th:last-child,
-html.high-contrast .markdown td,
-html.high-contrast .markdown td:last-child {
-  border-color: rgb(var(--border-medium));
-}
-/* `.btn-neutral` (the Builder's Knowledge, Code Files and Assistant selectors
- * and the delete trigger) predates the token layer and hard-codes its edge,
- * label and hover fill. On white, `rgba(0, 0, 0, 0.1)` and #ececf1 sit at 1.1:1
- * and 1.05:1; on black, #424242 sits at 2.09:1 for both the edge and the hover
- * fill. All four are under the 3:1 non-text floor, which leaves the control
- * boundary and its hover state unreadable. */
-html.high-contrast .btn-neutral,
-html.high-contrast.dark .btn-neutral {
-  background-color: rgb(var(--surface-primary));
-  border-color: rgb(var(--border-medium));
-  color: rgb(var(--text-primary));
-}
-html.high-contrast .btn-neutral:hover,
-html.high-contrast.dark .btn-neutral:hover {
-  background-color: rgb(var(--surface-hover));
+
+/* Effet Glassmorphism au survol dans la barre latérale */
+.sidebar-astrelya button:hover,
+.sidebar-astrelya [role="combobox"]:hover,
+.sidebar-astrelya [role="button"]:hover,
+.sidebar-astrelya a:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(8px);
 }
 
 .text-token-text-primary {
@@ -1311,16 +1145,16 @@ button {
 .btn {
   align-items: center;
   border-color: transparent;
-  border-radius: 0.5rem;
+  border-radius: 9999px; /* forme pilule, comme "Prenons contact" sur astrelya.com */
   border-width: 1px;
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.25rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 1.25rem;
   pointer-events: auto;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 .custom-btn {
   align-items: center;
@@ -1344,12 +1178,12 @@ button {
 .btn-primary {
   --tw-bg-opacity: 1;
   --tw-text-opacity: 1;
-  background-color: rgba(16, 163, 127, var(--tw-bg-opacity));
+  background-color: rgba(10, 17, 40, var(--tw-bg-opacity)); /* #0A1128, marine astrelya.com */
   color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 .btn-primary:hover {
   --tw-bg-opacity: 1;
-  background-color: rgba(26, 127, 100, var(--tw-bg-opacity));
+  background-color: rgba(0, 80, 255, var(--tw-bg-opacity)); /* bascule vers le bleu vif au survol */
 }
 .btn-primary:focus {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
@@ -1366,15 +1200,15 @@ button {
 }
 .btn-primary.focus-visible {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgba(25, 195, 125, var(--tw-ring-opacity));
+  --tw-ring-color: rgba(0, 80, 255, var(--tw-ring-opacity));
 }
 .btn-primary:focus-visible {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgba(25, 195, 125, var(--tw-ring-opacity));
+  --tw-ring-color: rgba(0, 80, 255, var(--tw-ring-opacity));
 }
 .btn-primary:disabled:hover {
   --tw-bg-opacity: 1;
-  background-color: rgba(16, 163, 127, var(--tw-bg-opacity));
+  background-color: rgba(0, 80, 255, var(--tw-bg-opacity));
 }
 .btn-secondary {
   --tw-border-opacity: 1;
@@ -1439,31 +1273,50 @@ button {
   padding: 0.25rem 0.5rem;
 }
 
-/* Webkit scrollbar */
-:root {
-  /* Width of the app's own scrollbars, and so of the band a
-     `scrollbar-gutter: stable` container holds back. `.scrollbar-gutter-spacer`
-     reserves the same band without becoming a scroll container. */
-  --scrollbar-size: 0.5rem;
+.from-token-surface-secondary {
+  --tw-gradient-from: var(--surface-secondary) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsla(0, 0%, 100%, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+/* Webkit scrollbar (Apple Style) */
 ::-webkit-scrollbar {
-  height: 0.1em;
-  width: var(--scrollbar-size);
+  height: 14px;
+  width: 14px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 9999px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background-color: hsla(0, 0%, 100%, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 ::-webkit-scrollbar-track {
   background-color: transparent;
-  border-radius: 9999px;
+  border-radius: 10px;
+}
+
+.scrollbar-transparent::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.dark .scrollbar-transparent::-webkit-scrollbar-thumb {
+  background-color: transparent;
 }
 
 .markdown-table-wrapper {
@@ -1976,75 +1829,71 @@ html {
   --tw-shadow-colored: inset 0 0 0 0 1px var(--tw-shadow-color);
 }
 
+@keyframes astrelya-pulse {
+  0% { transform: scale(0.85); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
 .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
 .result-streaming > pre:last-child code:after {
   display: inline-block;
-  content: '⬤';
-  width: 12px;
-  height: 12px;
-  font-family:
-    system-ui,
-    Inter,
-    Söhne Circle,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    Ubuntu,
-    Cantarell,
-    Noto Sans,
-    sans-serif;
-  line-height: normal;
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-color: var(--charter-blue, #0050ff);
+  -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   margin-left: 0.25rem;
   vertical-align: middle;
-  font-size: 0.5rem;
+  animation: astrelya-pulse 0.8s infinite alternate ease-in-out;
 }
 
 @supports (selector(:has(*))) {
   .result-streaming > :is(ul, ol):last-child > li:last-child:not(:has(> :is(ul, ol, pre))):after {
-    content: '⬤';
-    font-family:
-      system-ui,
-      Inter,
-      Söhne Circle,
-      -apple-system,
-      Segoe UI,
-      Roboto,
-      Ubuntu,
-      Cantarell,
-      Noto Sans,
-      sans-serif;
-    line-height: normal;
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-color: var(--charter-blue, #0050ff);
+    -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+    mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
     margin-left: 0.25rem;
     vertical-align: middle;
-    font-size: 0.5rem;
+    animation: astrelya-pulse 0.8s infinite alternate ease-in-out;
     display: inline-block;
-    width: 12px;
-    height: 12px;
   }
 }
 
 @supports not (selector(:has(*))) {
   .result-streaming > ol:last-child > li:last-child:after,
   .result-streaming > ul:last-child > li:last-child:after {
-    content: '⬤';
-    font-family:
-      system-ui,
-      Inter,
-      Söhne Circle,
-      -apple-system,
-      Segoe UI,
-      Roboto,
-      Ubuntu,
-      Cantarell,
-      Noto Sans,
-      sans-serif;
-    line-height: normal;
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-color: var(--charter-blue, #0050ff);
+    -webkit-mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+    mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M%2015%2085%20L%2045%2025%20C%2048%2018%2C%2052%2018%2C%2055%2025%20L%2075%2065%22%20%2F%3E%3Cpath%20d%3D%22M%2035%2085%20L%2055%2035%20C%2058%2028%2C%2062%2028%2C%2065%2035%20L%2085%2085%22%20%2F%3E%3Cpath%20d%3D%22M%2075%2015%20L%2085%2025%20M%2080%2010%20L%2080%2030%20M%2070%2020%20L%2090%2020%22%20stroke-width%3D%225%22%20%2F%3E%3C%2Fsvg%3E');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
     margin-left: 0.25rem;
     vertical-align: middle;
-    font-size: 0.5rem;
+    animation: astrelya-pulse 0.8s infinite alternate ease-in-out;
     display: inline-block;
-    width: 12px;
-    height: 12px;
   }
 
   .result-streaming > ol:last-child > li:last-child > :is(ul, ol, pre) ~ :after,

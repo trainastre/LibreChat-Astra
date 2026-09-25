@@ -293,7 +293,10 @@ export default function AssistantPanel({
             </button>
           )}
         </div>
-        <div className="h-auto bg-surface-primary px-4 pb-8 pt-3 dark:bg-transparent">
+        <div className="bg-surface-50 h-auto px-4 pb-8 pt-3 dark:bg-transparent">
+          {/* === SECTION: Informations Générales === */}
+          <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Informations Générales</h3>
           {/* Avatar & Name */}
           <div className="mb-4">
             <AssistantAvatar
@@ -350,10 +353,14 @@ export default function AssistantPanel({
               )}
             />
           </div>
+          </div>
 
+          {/* === SECTION: Comportement === */}
+          <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Instructions</h3>
           {/* Instructions */}
           <div className="mb-6">
-            <label className={labelClass} htmlFor="instructions">
+            <label className="sr-only" htmlFor="instructions">
               {localize('com_ui_instructions')}
             </label>
             <Controller
@@ -392,6 +399,11 @@ export default function AssistantPanel({
               )}
             />
           </div>
+          </div>
+
+          {/* === SECTION: Modèle === */}
+          <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Modèle & Contexte</h3>
           {/* Model */}
           <div className="mb-6">
             <label className={labelClass} htmlFor="model">
@@ -429,10 +441,18 @@ export default function AssistantPanel({
               )}
             />
           </div>
-          {/* Knowledge */}
+          
+          {/* Knowledge moved to Model & Contexte */}
           {(codeEnabled === true || retrievalEnabled === true) && version == 1 && (
-            <Knowledge assistant_id={assistant_id} files={files} endpoint={endpoint} />
+            <div className="mt-4 border-t border-border-light pt-4">
+              <Knowledge assistant_id={assistant_id} files={files} endpoint={endpoint} />
+            </div>
           )}
+          </div>
+
+          {/* === SECTION: Capacités === */}
+          <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Capacités & Outils</h3>
           {/* Capabilities */}
           <CapabilitiesForm
             version={version}
@@ -442,7 +462,7 @@ export default function AssistantPanel({
             retrievalEnabled={retrievalEnabled}
           />
           {/* Tools */}
-          <div className="mb-6">
+          <div className="mt-4 mb-6 border-t border-border-light pt-4">
             <label className={labelClass}>
               {`${toolsEnabled === true ? localize('com_ui_tools') : ''}
               ${toolsEnabled === true && actionsEnabled === true ? ' + ' : ''}
@@ -497,6 +517,8 @@ export default function AssistantPanel({
               </div>
             </div>
           </div>
+          </div>
+
           <div className="flex items-center justify-end gap-2">
             {/* Context Button */}
             <ContextButton

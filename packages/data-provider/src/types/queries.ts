@@ -310,3 +310,42 @@ export type GraphTokenResponse = {
   expires_in: number;
   scope: string;
 };
+
+/* User Feedback */
+export type UserFeedbackType = 'bug' | 'feedback';
+
+export interface UserFeedbackPayload {
+  type: UserFeedbackType;
+  message: string;
+  screenshot?: File;
+  pageUrl?: string;
+}
+
+export interface UserFeedbackResponse {
+  message: string;
+}
+
+/* Admin — Feedback list */
+export interface AdminFeedbackItem {
+  _id: string;
+  userId?: string;
+  type?: UserFeedbackType;
+  message?: string;
+  screenshotData?: string;
+  pageUrl?: string;
+  userAgent?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AdminFeedbackListParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface AdminFeedbackListResponse {
+  feedbacks: AdminFeedbackItem[];
+  total: number;
+  page: number;
+  totalPages: number;
+}

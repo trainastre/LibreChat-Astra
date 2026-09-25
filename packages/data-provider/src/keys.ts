@@ -158,13 +158,7 @@ export enum MutationKeys {
   deleteSkillNode = 'deleteSkillNode',
   updateSkillNodeContent = 'updateSkillNodeContent',
   convoPin = 'convoPin',
-  archiveAllConversations = 'archiveAllConversations',
-  createSchedule = 'createSchedule',
-  updateSchedule = 'updateSchedule',
-  deleteSchedule = 'deleteSchedule',
-  runSchedule = 'runSchedule',
-  pairCodeEnvironment = 'pairCodeEnvironment',
-  updateCodeEnvironmentSettings = 'updateCodeEnvironmentSettings',
-  deleteCodeEnvironment = 'deleteCodeEnvironment',
-  moveConversationCodeEnvironment = 'moveConversationCodeEnvironment',
+  submitUserFeedback = 'submitUserFeedback',
+  /* Admin */
+  adminFeedbacks = 'adminFeedbacks',
 }

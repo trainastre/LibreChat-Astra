@@ -186,55 +186,43 @@ function UnifiedSidebar({ isSliding = false }: { isSliding?: boolean }) {
 
   if (isSmallScreen) {
     return (
-      <div
-        id={MOBILE_DRAWER_ID}
-        className={cn(
-          /** The close swipe reads horizontal touches here (the drawer holds no
-           * horizontal scrollers), while pinch-zoom stays with the browser —
-           * this full-viewport surface must not disable zooming entirely. */
-          'fixed inset-y-0 left-0 flex touch-pan-y touch-pinch-zoom flex-col bg-surface-primary-alt',
-          expanded ? 'translate-x-0' : '-translate-x-full',
-        )}
-        style={{
-          width: MOBILE_DRAWER_WIDTH,
-          /** The strip setting changes the width without passing through the
-           *  snap path, so the preference has to reach the declarative style
-           *  too or that one change still animates. */
-          transition: prefersReducedMotion ? undefined : MOBILE_DRAWER_TRANSITION,
-          zIndex: DRAWER_Z_INDEX,
-          /** Why a closed drawer is not painted at all: see DRAWER_UNPAINTED.
-           *  The travel stays painted — `isSliding` covers the frames Recoil's
-           *  deferred flip leaves uncovered at both ends, and a drag claims
-           *  painting inline (see useDrawerSwipe), which hands this value back
-           *  explicitly because React cannot re-assert it on its own. */
-          visibility: expanded || isSliding ? undefined : DRAWER_UNPAINTED,
-        }}
-        inert={!expanded ? '' : undefined}
-      >
-        <SidebarChatProvider>
-          <ActivePanelProvider>
-            <MobileHeader
-              links={links}
-              expanded={expanded}
-              onClose={handleCollapse}
-              onLeaveInsights={handleLeaveInsights}
-              routeActiveId={isInsightsRoute ? 'insights' : undefined}
-            />
-            <nav
-              id="chat-history-nav"
-              className="min-h-0 flex-1 overflow-hidden bg-surface-primary-alt"
-            >
-              <SidePanelNav links={links} />
-            </nav>
-            <MobileShortcutTargets
-              links={links}
-              onLeaveInsights={handleLeaveInsights}
-              routeActiveId={isInsightsRoute ? 'insights' : undefined}
-            />
-            <MobileBottomBar links={links} onNewChat={handleCollapse} />
-          </ActivePanelProvider>
-        </SidebarChatProvider>
-      </div>
+      <>
+        <div
+          className={cn(
+            'fixed left-0 top-0 z-[110] flex h-full bg-surface-primary-alt sidebar-astrelya',
+            expanded ? 'translate-x-0' : '-translate-x-full',
+          )}
+          style={{
+            width: 'min(85vw, 380px)',
+            transition: `transform ${TRANSITION_MS}ms ${EASING}`,
+          }}
+          inert={!expanded ? '' : undefined}
+        >
+          <SidebarChatProvider>
+            <ActivePanelProvider>
+              <ExpandedPanel links={links} onCollapse={handleCollapse} />
+              <nav className="min-h-0 flex-1 overflow-hidden bg-surface-primary-alt">
+                <SidePanelNav links={links} />
+              </nav>
+            </ActivePanelProvider>
+          </SidebarChatProvider>
+        </div>
+        <div
+          className={cn(
+            'fixed inset-0 z-[109] bg-black/50',
+            expanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
+          )}
+          style={{ transition: `opacity ${TRANSITION_MS}ms ${EASING}` }}
+          role="presentation"
+        >
+          <button
+            className="h-full w-full"
+            onClick={handleCollapse}
+            aria-label={localize('com_nav_close_sidebar')}
+            tabIndex={expanded ? 0 : -1}
+          />
+        </div>
+      </>
     );
   }
 
