@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import { MessageSquare, Info } from 'lucide-react';
+import { MessageSquare, Info, Flag } from 'lucide-react';
 import { SettingsTabValues } from 'librechat-data-provider';
 import { GearIcon, DataIcon, UserIcon, SpeechIcon } from '@librechat/client';
 import type { ComponentType, ReactNode } from 'react';
@@ -11,12 +11,14 @@ export type SettingsTab =
   | SettingsTabValues.SPEECH
   | SettingsTabValues.DATA
   | SettingsTabValues.ACCOUNT
-  | SettingsTabValues.ABOUT;
+  | SettingsTabValues.ABOUT
+  | SettingsTabValues.ADMIN_FEEDBACK;
 
 export type SectionId =
   | 'appearance'
   | 'layout'
   | 'accessibility'
+  | 'tutorial'
   | 'sending'
   | 'commands'
   | 'messages'
@@ -31,7 +33,8 @@ export type SectionId =
   | 'profile'
   | 'security'
   | 'billing'
-  | 'about';
+  | 'about'
+  | 'feedbacks';
 
 export interface SettingsContextValue {
   balanceEnabled: boolean;
@@ -46,6 +49,7 @@ export interface SettingsContextValue {
   allowAccountDeletion: boolean;
   aboutEnabled: boolean;
   engineTTS: string;
+  isAdmin: boolean;
 }
 
 export interface SettingEntry {
@@ -81,6 +85,7 @@ export const TABS: TabMeta[] = [
       { id: 'appearance', labelKey: 'com_ui_settings_section_appearance' },
       { id: 'layout', labelKey: 'com_ui_settings_section_layout' },
       { id: 'accessibility', labelKey: 'com_ui_settings_section_accessibility' },
+      { id: 'tutorial', labelKey: 'com_tutorial_section_label' },
     ],
   },
   {
@@ -132,5 +137,12 @@ export const TABS: TabMeta[] = [
     icon: createElement(Info, { className: 'icon-sm', 'aria-hidden': true }),
     sections: [{ id: 'about', labelKey: 'com_nav_setting_about' }],
     show: (ctx) => ctx.aboutEnabled,
+  },
+  {
+    id: SettingsTabValues.ADMIN_FEEDBACK,
+    labelKey: 'com_nav_setting_admin_feedback',
+    icon: createElement(Flag, { className: 'icon-sm', 'aria-hidden': true }),
+    sections: [{ id: 'feedbacks', labelKey: 'com_nav_setting_admin_feedback' }],
+    show: (ctx) => ctx.isAdmin,
   },
 ];

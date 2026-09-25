@@ -22,6 +22,8 @@ import { useUserTermsQuery, useGetStartupConfig } from '~/data-provider';
 import useKeyboardShortcuts from '~/hooks/useKeyboardShortcuts';
 import { UnifiedSidebar } from '~/components/UnifiedSidebar';
 import { TermsAndConditionsModal } from '~/components/ui';
+import { FeedbackButton } from '~/components/Feedback';
+import { Tutorial } from '~/components/Tutorial';
 import { useHealthCheck } from '~/data-provider';
 import { Banner } from '~/components/Banners';
 import store from '~/store';
@@ -100,6 +102,8 @@ export default function Root() {
                   </div>
                 </div>
               </div>
+              <FeedbackButton />
+              <Tutorial />
             </PromptGroupsProvider>
           </AgentsMapContext.Provider>
           {config?.interface?.termsOfService?.modalAcceptance === true && (

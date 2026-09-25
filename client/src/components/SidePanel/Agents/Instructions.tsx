@@ -44,13 +44,10 @@ export default function Instructions() {
   return (
     <div className="mb-4">
       <div className="mb-2 flex items-center">
-        <label
-          className="text-token-text-primary flex-grow text-sm font-medium"
-          htmlFor="instructions"
-        >
+        <label className="sr-only" htmlFor="instructions">
           {localize('com_ui_instructions')}
         </label>
-        <div className="ml-auto" title="Add variables to instructions">
+        <div title="Add variables to instructions">
           <DropdownPopup
             portal={true}
             mountByState={true}

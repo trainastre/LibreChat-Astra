@@ -247,7 +247,7 @@ function SkillSelectDialog({ isOpen, setIsOpen }: SkillSelectDialogProps) {
         showCloseButton={false}
       >
         <div className="flex h-[80vh] max-h-[720px]">
-          <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-border-light bg-surface-primary-alt p-3">
+          <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-border-light bg-surface-primary-alt sidebar-astrelya p-3">
             <h2 className="px-2.5 pb-1.5 pt-1 text-base font-bold text-text-primary">
               {localize('com_ui_add_skills')}
             </h2>

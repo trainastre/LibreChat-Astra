@@ -129,4 +129,7 @@ export enum MutationKeys {
   deleteSkillNode = 'deleteSkillNode',
   updateSkillNodeContent = 'updateSkillNodeContent',
   convoPin = 'convoPin',
+  submitUserFeedback = 'submitUserFeedback',
+  /* Admin */
+  adminFeedbacks = 'adminFeedbacks',
 }

@@ -1,3 +1,5 @@
+const userFeedback = require('./userFeedback');
+const adminUserFeedback = require('./admin/userFeedback');
 const accessPermissions = require('./accessPermissions');
 const assistants = require('./assistants');
 const categories = require('./categories');
@@ -76,4 +78,6 @@ module.exports = {
   categories,
   staticRoute,
   accessPermissions,
+  adminUserFeedback,
+  userFeedback,
 };

@@ -3,6 +3,12 @@ import { TAttachment } from 'librechat-data-provider';
 import { atomWithLocalStorage } from './utils';
 import { BadgeItem } from '~/common';
 
+/** Set to `true` to trigger the tutorial from anywhere (e.g. Settings). Auto-resets to false. */
+export const showTutorialAtom = atom<boolean>({
+  key: 'showTutorial',
+  default: false,
+});
+
 const hideBannerHint = atomWithLocalStorage('hideBannerHint', [] as string[]);
 
 const messageAttachmentsMap = atom<Record<string, TAttachment[] | undefined>>({

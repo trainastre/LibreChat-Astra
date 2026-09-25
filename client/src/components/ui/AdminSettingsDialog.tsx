@@ -153,7 +153,7 @@ const AdminSettingsDialog: React.FC<AdminSettingsDialogProps> = ({
     <Button
       size="sm"
       variant="outline"
-      className="relative h-9 w-full gap-2 rounded-lg border-border-light font-medium focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
+      className="relative h-9 w-full gap-2 rounded-full border-border-light font-medium focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
       aria-label={localize('com_ui_admin_settings')}
     >
       <ShieldEllipsis className="size-5 cursor-pointer" aria-hidden="true" />

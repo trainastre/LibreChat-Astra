@@ -522,3 +522,17 @@ export const getAllEffectivePermissions = (resourceType: ResourceType) =>
 // SharePoint Graph API Token
 export const graphToken = (scopes: string) =>
   `${BASE_URL}/api/auth/graph-token?scopes=${encodeURIComponent(scopes)}`;
+
+/* User Feedback */
+export const userFeedback = () => `${BASE_URL}/api/user-feedback`;
+
+/* Admin — User Feedback */
+export const adminUserFeedback = (params?: { page?: number; limit?: number }) => {
+  const base = `${BASE_URL}/api/admin/user-feedback`;
+  if (!params) return base;
+  const query = Object.entries(params)
+    .filter(([, v]) => v !== undefined)
+    .map(([k, v]) => `${k}=${v}`)
+    .join('&');
+  return query ? `${base}?${query}` : base;
+};

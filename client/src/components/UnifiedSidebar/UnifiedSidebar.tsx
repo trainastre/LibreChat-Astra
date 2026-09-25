@@ -137,7 +137,7 @@ function UnifiedSidebar() {
       <>
         <div
           className={cn(
-            'fixed left-0 top-0 z-[110] flex h-full bg-surface-primary-alt',
+            'fixed left-0 top-0 z-[110] flex h-full bg-surface-primary-alt sidebar-astrelya',
             expanded ? 'translate-x-0' : '-translate-x-full',
           )}
           style={{

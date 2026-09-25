@@ -66,30 +66,34 @@ module.exports = {
       colors: {
         gray: {
           20: '#ececf1',
-          50: '#f7f7f8',
-          100: '#ececec',
+          50: '#f8f9fa',
+          100: '#e9ecef',
           200: '#e3e3e3',
           300: '#cdcdcd',
           400: '#999696',
           500: '#595959',
           600: '#424242',
           700: '#2f2f2f',
-          800: '#212121',
+          800: '#1a1a1a',
           850: '#171717',
           900: '#0d0d0d',
         },
+        /* Palette de marque : remplace le vert LibreChat par défaut.
+           On garde la clé "green" pour que toutes les classes existantes
+           (bg-green-500, hover:bg-green-600, etc.) héritent automatiquement
+           de la nouvelle charte sans devoir toucher chaque composant. */
         green: {
-          50: '#f1f9f7',
-          100: '#def2ed',
-          200: '#a6e5d6',
-          300: '#6dc8b9',
-          400: '#41a79d',
-          500: '#10a37f',
-          550: '#349072',
-          600: '#126e6b',
-          700: '#0a4f53',
-          800: '#06373e',
-          900: '#031f29',
+          50: '#eef3ff',
+          100: '#dce7ff',
+          200: '#b3c9ff',
+          300: '#85a8ff',
+          400: '#4d7dff',
+          500: '#0050ff', // bleu signature
+          550: '#0047e6',
+          600: '#003ecc', // état hover
+          700: '#032e94',
+          800: '#0d1a4d',
+          900: '#0a1128', // bleu marine (astrelya.com)
         },
         'brand-purple': 'var(--brand-purple)',
         presentation: 'var(--presentation)',

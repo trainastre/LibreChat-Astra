@@ -258,12 +258,14 @@ export default function AgentConfig() {
   return (
     <>
       <div className="h-auto pt-1">
-        {/* Avatar & Name */}
-        <div className="mb-4">
-          <AgentAvatar avatar={agent?.['avatar'] ?? null} />
+        {/* === SECTION: Informations Générales === */}
+        <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Informations Générales</h3>
+          {/* Avatar & Name */}
+          <div className="mb-4">
+            <AgentAvatar avatar={agent?.['avatar'] ?? null} />
           <label className={labelClass} htmlFor="name">
             {localize('com_ui_name')}
-            <span className="text-red-500">*</span>
           </label>
           <Controller
             name="name"
@@ -330,16 +332,26 @@ export default function AgentConfig() {
         {/* Category */}
         <div className="mb-4">
           <label className={labelClass} htmlFor="category-selector">
-            {localize('com_ui_category')} <span className="text-red-500">*</span>
+            {localize('com_ui_category')}
           </label>
           <AgentCategorySelector className="w-full" />
         </div>
+        </div>
+
+        {/* === SECTION: Comportement === */}
+        <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Instructions</h3>
         {/* Instructions */}
         <Instructions />
+        </div>
+
+        {/* === SECTION: Modèle === */}
+        <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Modèle & Contexte</h3>
         {/* Model and Provider */}
         <div className="mb-4">
           <label className={labelClass} htmlFor="provider">
-            {localize('com_ui_model')} <span className="text-red-500">*</span>
+            {localize('com_ui_model')}
           </label>
           <button
             type="button"
@@ -357,10 +369,21 @@ export default function AgentConfig() {
                   />
                 </div>
               )}
-              <span>{model != null && model ? model : localize('com_ui_select_model')}</span>
             </div>
           </button>
         </div>
+        
+        {/* File Context moved to Model & Contexte */}
+        {contextEnabled && (
+          <div className="mt-4 border-t border-border-light pt-4">
+            <FileContext agent_id={agent_id} files={context_files} />
+          </div>
+        )}
+        </div>
+
+        {/* === SECTION: Capacités === */}
+        <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Capacités & Outils</h3>
         {(codeEnabled ||
           fileSearchEnabled ||
           artifactsEnabled ||
@@ -374,8 +397,6 @@ export default function AgentConfig() {
             {codeEnabled && <CodeForm agent_id={agent_id} files={code_files} />}
             {/* Web Search */}
             {webSearchEnabled && <SearchForm />}
-            {/* File Context */}
-            {contextEnabled && <FileContext agent_id={agent_id} files={context_files} />}
             {/* Artifacts */}
             {artifactsEnabled && <Artifacts />}
             {/* File Search */}
@@ -384,15 +405,17 @@ export default function AgentConfig() {
         )}
         {/* MCP Section */}
         {availableMCPServers != null && availableMCPServers.length > 0 && (
-          <MCPTools
-            agentId={agent_id}
-            mcpServerNames={mcpServerNames}
-            setShowMCPToolDialog={setShowMCPToolDialog}
-          />
+          <div className="mt-4 border-t border-border-light pt-4">
+            <MCPTools
+              agentId={agent_id}
+              mcpServerNames={mcpServerNames}
+              setShowMCPToolDialog={setShowMCPToolDialog}
+            />
+          </div>
         )}
 
         {showSkills && (
-          <div className="mb-4">
+          <div className="mt-4 mb-4 border-t border-border-light pt-4">
             <div className="mb-2 flex items-center justify-between">
               <label
                 htmlFor="skills_enabled"
@@ -486,7 +509,7 @@ export default function AgentConfig() {
         )}
 
         {/* Agent Tools & Actions */}
-        <div className="mb-4">
+        <div className="mt-4 mb-4 border-t border-border-light pt-4">
           <label className={labelClass}>
             {(() => {
               if (toolsEnabled === true && actionsEnabled === true) {
@@ -560,6 +583,11 @@ export default function AgentConfig() {
             </div>
           </div>
         </div>
+        </div>
+
+        {/* === SECTION: Support === */}
+        <div className="mb-6 rounded-xl border border-border-light bg-surface-secondary/30 p-4 shadow-sm">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-text-secondary">Contact & Support</h3>
         {/* Support Contact (Optional) */}
         <div className="mb-4">
           <div className="mb-1.5 flex items-center gap-2">
@@ -657,6 +685,7 @@ export default function AgentConfig() {
               />
             </div>
           </div>
+        </div>
         </div>
       </div>
       <ToolSelectDialog

@@ -30,13 +30,18 @@ function Sidebar({
         />
         <nav
           className={cn(
-            'min-h-0 flex-1 overflow-hidden bg-surface-primary-alt',
+            'flex min-h-0 flex-1 flex-col overflow-hidden bg-surface-primary-alt sidebar-astrelya',
             expanded ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}
           style={{ transition: expanded ? 'opacity 200ms ease 80ms' : 'opacity 150ms ease' }}
           aria-hidden={!expanded}
         >
-          <SidePanelNav links={links} />
+          <div className="flex w-full items-center justify-center p-4 pb-0 shrink-0">
+            <img src="/assets/astrelya-logo-v3.png" alt="Astrelya Logo" className="h-8 w-auto object-contain drop-shadow-md" />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <SidePanelNav links={links} />
+          </div>
         </nav>
       </div>
       <div

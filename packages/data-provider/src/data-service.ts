@@ -1294,6 +1294,26 @@ export function verifyTwoFactorTemp(
   return request.post(endpoints.verifyTwoFactorTemp(), payload);
 }
 
+/* User Feedback */
+export function submitUserFeedback(payload: q.UserFeedbackPayload): Promise<q.UserFeedbackResponse> {
+  const formData = new FormData();
+  formData.append('type', payload.type);
+  formData.append('message', payload.message);
+  if (payload.screenshot) {
+    formData.append('screenshot', payload.screenshot);
+  }
+  if (payload.pageUrl) {
+    formData.append('pageUrl', payload.pageUrl);
+  }
+  return request.postMultiPart(endpoints.userFeedback(), formData);
+}
+
+export function getAdminFeedbacks(
+  params?: q.AdminFeedbackListParams,
+): Promise<q.AdminFeedbackListResponse> {
+  return request.get(endpoints.adminUserFeedback(params));
+}
+
 /* Memories */
 export const getMemories = (): Promise<q.MemoriesResponse> => {
   return request.get(endpoints.memories());
