@@ -1,22 +1,29 @@
-import { useCallback, useState, useEffect, useRef, memo, startTransition } from 'react';
-import type { ReactNode } from 'react';
-import { useRecoilState } from 'recoil';
+import { useCallback, useState, useEffect, useRef, memo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMediaQuery } from '@librechat/client';
+import { useLocation, useNavigate } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import type { ChatFormValues } from '~/common';
+import {
+  COLLAPSED_WIDTH,
+  EXPANDED_MIN,
+  TRANSITION_MS,
+  EASING,
+  MOBILE_DRAWER_TRANSITION,
+  DRAWER_Z_INDEX,
+  MOBILE_DRAWER_ID,
+  MOBILE_DRAWER_WIDTH,
+  DRAWER_UNPAINTED,
+} from './constants';
 import { ChatContext, ChatFormProvider, ActivePanelProvider } from '~/Providers';
+import { MobileHeader, MobileBottomBar, MobileShortcutTargets } from './mobile';
 import useUnifiedSidebarLinks from '~/hooks/Nav/useUnifiedSidebarLinks';
+import useSidebarToggle from '~/hooks/Nav/useSidebarToggle';
+import useSidebarState from '~/hooks/Nav/useSidebarState';
 import { useChatHelpers, useLocalize } from '~/hooks';
 import SidePanelNav from '~/components/SidePanel/Nav';
-import ExpandedPanel from './ExpandedPanel';
 import Sidebar from './Sidebar';
 import { cn } from '~/utils';
-import store from '~/store';
-
-const COLLAPSED_WIDTH = 52;
-const EXPANDED_MIN = 360;
-const TRANSITION_MS = 300;
-const EASING = 'cubic-bezier(0.2, 0, 0, 1)';
 
 function getInitialWidth(): number {
   const saved = localStorage.getItem('side:width');
@@ -39,27 +46,59 @@ function SidebarChatProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function UnifiedSidebar() {
+function UnifiedSidebar({ isSliding = false }: { isSliding?: boolean }) {
   const localize = useLocalize();
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
-  const [expanded, setExpanded] = useRecoilState(store.sidebarExpanded);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isSmallScreen, expanded } = useSidebarState();
+  const { setSidebarOpen } = useSidebarToggle();
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [sidebarWidth, setSidebarWidth] = useState(getInitialWidth);
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
   const [isResizing, setIsResizing] = useState(false);
   const resizeHandlers = useRef<{ move: (e: MouseEvent) => void; up: () => void } | null>(null);
 
   const links = useUnifiedSidebarLinks();
+  const isInsightsRoute = location.pathname.startsWith('/insights');
+  const panelExpanded = expanded && !isInsightsRoute;
 
-  const handleCollapse = useCallback(() => {
-    startTransition(() => {
-      setExpanded(false);
-    });
-  }, [setExpanded]);
+  /** The aside's max width is a viewport percentage, so the announced range has to track
+   *  the viewport rather than a render-time snapshot of it. */
+  useEffect(() => {
+    const handleViewportResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleViewportResize);
+    return () => window.removeEventListener('resize', handleViewportResize);
+  }, []);
+
+  /** Mirrors the bounds the aside is rendered with, so the handle never announces a value
+   *  outside its own range. CSS resolves a 40% that falls under `min-width` in favor of the
+   *  minimum, and the resize handlers clamp the same way, so the floor belongs here too. */
+  const resizeMax = Math.max(EXPANDED_MIN, Math.round(viewportWidth * 0.4));
+  const resizeNow = panelExpanded
+    ? Math.min(Math.max(sidebarWidth, EXPANDED_MIN), resizeMax)
+    : COLLAPSED_WIDTH;
+
+  const handleCollapse = useCallback(
+    (afterSlide?: () => void) => {
+      setSidebarOpen(false, afterSlide);
+    },
+    [setSidebarOpen],
+  );
 
   const handleExpand = useCallback(() => {
-    startTransition(() => {
-      setExpanded(true);
-    });
-  }, [setExpanded]);
+    setSidebarOpen(true);
+  }, [setSidebarOpen]);
+
+  const handleLeaveInsights = useCallback(() => {
+    navigate('/c/new');
+  }, [navigate]);
+
+  const handlePanelExpand = useCallback(() => {
+    if (isInsightsRoute) {
+      handleLeaveInsights();
+    }
+    handleExpand();
+  }, [handleExpand, handleLeaveInsights, isInsightsRoute]);
 
   const handleResizeStart = useCallback(() => {
     setIsResizing(true);
@@ -124,9 +163,22 @@ function UnifiedSidebar() {
       return;
     }
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleCollapse();
+      if (e.key !== 'Escape') {
+        return;
       }
+      /**
+       * Menus opened from the drawer portal out of it, so their Escape still
+       * reaches this listener. Dismissing the whole drawer would skip the level
+       * the user meant to leave.
+       *
+       * Presence alone is not the signal: not every menu unmounts when closed —
+       * the account menu stays mounted and merely `hidden` — so matching those
+       * too would suppress Escape for the drawer permanently.
+       */
+      if (document.querySelector('[role="menu"]:not([hidden])') != null) {
+        return;
+      }
+      handleCollapse();
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
@@ -180,9 +232,9 @@ function UnifiedSidebar() {
         <aside
           className="relative flex h-full flex-shrink-0 overflow-hidden"
           style={{
-            width: expanded ? sidebarWidth : COLLAPSED_WIDTH,
-            minWidth: expanded ? EXPANDED_MIN : COLLAPSED_WIDTH,
-            maxWidth: expanded ? '40%' : COLLAPSED_WIDTH,
+            width: panelExpanded ? sidebarWidth : COLLAPSED_WIDTH,
+            minWidth: panelExpanded ? EXPANDED_MIN : COLLAPSED_WIDTH,
+            maxWidth: panelExpanded ? '40%' : COLLAPSED_WIDTH,
             transition: isResizing
               ? 'none'
               : `width ${TRANSITION_MS}ms ${EASING}, min-width ${TRANSITION_MS}ms ${EASING}, max-width ${TRANSITION_MS}ms ${EASING}`,
@@ -191,9 +243,13 @@ function UnifiedSidebar() {
         >
           <Sidebar
             links={links}
-            expanded={expanded}
+            expanded={panelExpanded}
+            width={resizeNow}
+            minWidth={panelExpanded ? EXPANDED_MIN : COLLAPSED_WIDTH}
+            maxWidth={panelExpanded ? resizeMax : COLLAPSED_WIDTH}
             onCollapse={handleCollapse}
-            onExpand={handleExpand}
+            onExpand={handlePanelExpand}
+            onLeaveInsights={handleLeaveInsights}
             onResizeStart={handleResizeStart}
             onResizeKeyboard={handleResizeKeyboard}
           />

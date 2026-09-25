@@ -1,4 +1,3 @@
-import { useLocalize } from '~/hooks';
 import { TStartupConfig } from 'librechat-data-provider';
 
 // function Footer({ startupConfig }: { startupConfig: TStartupConfig | null | undefined }) {

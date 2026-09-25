@@ -1,7 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback, startTransition } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Outlet } from 'react-router-dom';
 import { useMediaQuery } from '@librechat/client';
+import {
+  UnifiedSidebar,
+  SIDEBAR_TRANSITION,
+  MOBILE_DRAWER_WIDTH_VAR,
+  MOBILE_DRAWER_STRIP_WIDTH,
+  MOBILE_DRAWER_FULL_WIDTH,
+  MOBILE_PANE_SHIFT,
+} from '~/components/UnifiedSidebar';
+import {
+  CodeHighlightThrottleContext,
+  normalizeCodeHighlightThrottleMs,
+} from '~/components/Chat/Messages/Content/Parts/useLazyHighlight';
 import {
   PromptGroupsProvider,
   AssistantsMapContext,
@@ -13,14 +25,18 @@ import {
   useSearchEnabled,
   useAssistantsMap,
   useAuthContext,
+  useCatalogWarmup,
   useAgentsMap,
   useFileMap,
 } from '~/hooks';
 import KeyboardShortcutsDialog from '~/components/Nav/KeyboardShortcutsDialog';
 import KeyboardDeleteDialog from '~/components/Nav/KeyboardDeleteDialog';
 import { useUserTermsQuery, useGetStartupConfig } from '~/data-provider';
+import { MobileDrawerScrim } from '~/components/UnifiedSidebar/mobile';
 import useKeyboardShortcuts from '~/hooks/useKeyboardShortcuts';
-import { UnifiedSidebar } from '~/components/UnifiedSidebar';
+import useDrawerDismiss from '~/hooks/Nav/useDrawerDismiss';
+import useSidebarToggle from '~/hooks/Nav/useSidebarToggle';
+import useSidebarState from '~/hooks/Nav/useSidebarState';
 import { TermsAndConditionsModal } from '~/components/ui';
 import { FeedbackButton } from '~/components/Feedback';
 import { Tutorial } from '~/components/Tutorial';
@@ -42,10 +58,56 @@ function KeyboardShortcutsProvider() {
 export default function Root() {
   const [showTerms, setShowTerms] = useState(false);
   const [bannerHeight, setBannerHeight] = useState(0);
-  const sidebarExpanded = useRecoilValue(store.sidebarExpanded);
-  const isSmallScreen = useMediaQuery('(max-width: 768px)');
-
+  /** Shared with the drawer so the two agree on the breakpoint-transition frame. */
+  const {
+    isSmallScreen,
+    expanded: sidebarExpanded,
+    setExpanded: setSidebarExpanded,
+  } = useSidebarState();
+  /** The one path drawer mutations take: it kicks the slide imperatively and
+   *  defers the Recoil flip, so a large conversation cannot stall first motion. */
+  const { setSidebarOpen } = useSidebarToggle();
+  /** The drawer and pane snap under reduced motion (see kickDrawerAnimation),
+   *  so the scrim must not keep fading on its own. */
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  /** Off by default, matching the drawer that covers the screen and closes by
+   *  swipe. Opting in narrows it and gives the strip a dismiss target. */
+  const drawerStrip = useRecoilValue(store.mobileDrawerStrip);
+  const paneRef = useRef<HTMLDivElement>(null);
+  /** Keyed off the committed state rather than the scrim's own click, because
+   *  the header button, Escape, conversation selection and the bottom bar all
+   *  close the drawer too. */
+  const { isSliding, onScrimClick } = useDrawerDismiss({
+    expanded: sidebarExpanded,
+    isSmallScreen,
+    prefersReducedMotion,
+    paneRef,
+    setOpen: setSidebarOpen,
+  });
+  /** Focus handoff lives in the drawer header's own expanded-effect — the
+   * commit drives it, so every opener (button, swipe) is covered without a
+   * timer racing the deferred state flip. */
+  const handleDrawerOpenChange = useCallback(
+    (next: boolean) => {
+      startTransition(() => {
+        setSidebarExpanded(next);
+      });
+    },
+    [setSidebarExpanded],
+  );
   const { isAuthenticated, logout } = useAuthContext();
+  /** Releases feature-catalog queries after first paint on browser idle. */
+  useCatalogWarmup(isAuthenticated);
+
+  useDrawerSwipe({
+    paneRef,
+    /** Auth gates the whole tree below (`return null`), so the swipe surfaces
+     * only exist once authenticated — enabling earlier would attach to
+     * nothing and never re-run when they mount. */
+    enabled: isSmallScreen && isAuthenticated,
+    open: sidebarExpanded,
+    onOpenChange: handleDrawerOpenChange,
+  });
 
   useHealthCheck(isAuthenticated);
 
@@ -57,6 +119,9 @@ export default function Root() {
   const { data: termsData } = useUserTermsQuery({
     enabled: isAuthenticated && config?.interface?.termsOfService?.modalAcceptance === true,
   });
+  const highlightThrottleMs = normalizeCodeHighlightThrottleMs(
+    config?.interface?.codeHighlightThrottleMs,
+  );
 
   useSearchEnabled(isAuthenticated);
 

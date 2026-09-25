@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from 'react';
 import TagManager from 'react-gtm-module';
 import ReactMarkdown from 'react-markdown';
-import { Constants } from 'librechat-data-provider';
+import { Constants, hasConfiguredFooter } from 'librechat-data-provider';
 import type { TStartupConfig } from 'librechat-data-provider';
 import { useGetStartupConfig } from '~/data-provider';
 import { useLocalize } from '~/hooks';
@@ -9,6 +9,13 @@ import { useLocalize } from '~/hooks';
 type FooterProps = {
   className?: string;
   startupConfig?: FooterStartupConfig | null;
+  /** A started conversation keeps only what the deployment configured. The
+   *  generic model disclaimer belongs to the welcome screen, where it is first
+   *  read, but a custom footer, a privacy policy and terms of service are the
+   *  operator's own content: scoping the disclaimer out must not take their
+   *  configuration off the screen that used to carry it. With nothing
+   *  configured, this renders nothing at all. */
+  configuredOnly?: boolean;
 };
 
 type FooterStartupConfig = Pick<Partial<TStartupConfig>, 'analyticsGtmId' | 'customFooter'> & {

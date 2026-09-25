@@ -1,78 +1,26 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { X } from 'lucide-react';
-import { useQueries } from '@tanstack/react-query';
-import { Switch, useToastContext } from '@librechat/client';
+import { Input, Label } from '@librechat/client';
 import { Controller, useWatch, useFormContext } from 'react-hook-form';
-import {
-  EModelEndpoint,
-  PermissionTypes,
-  Permissions,
-  QueryKeys,
-  dataService,
-  getEndpointField,
-} from 'librechat-data-provider';
-import type { AgentForm, IconComponentTypes } from '~/common';
-import {
-  removeFocusOutlines,
-  processAgentOption,
-  defaultTextProps,
-  validateEmail,
-  getIconKey,
-  cn,
-} from '~/utils';
-import { ToolSelectDialog, MCPToolSelectDialog } from '~/components/Tools';
-import useAgentCapabilities from '~/hooks/Agents/useAgentCapabilities';
-import { useListSkillsQuery, useGetAgentFiles } from '~/data-provider';
-import { useFileMapContext, useAgentPanelContext } from '~/Providers';
-import { useLocalize, useVisibleTools, useHasAccess } from '~/hooks';
-import { SkillSelectDialog } from '~/components/Skills/dialogs';
+import type { AgentForm } from '~/common';
+import { ResolvedProviderIcon } from '~/components/Endpoints/ResolvedProviderIcon';
 import AgentCategorySelector from './AgentCategorySelector';
-import Action from '~/components/SidePanel/Builder/Action';
-import { Panel, isEphemeralAgent } from '~/common';
-import { icons } from '~/hooks/Endpoint/Icons';
+import { useLocalize, useAgentCapabilities } from '~/hooks';
+import { useAgentFileEntries } from './Tools/hooks';
+import { useAgentPanelContext } from '~/Providers';
+import { useProviderIcon } from '~/hooks/Endpoint';
+import ToolsSection from './Tools/ToolsSection';
+import { validateEmail, cn } from '~/utils';
 import Instructions from './Instructions';
-import AgentAvatar from './AgentAvatar';
 import FileContext from './FileContext';
-import SearchForm from './Search/Form';
-import FileSearch from './FileSearch';
-import Artifacts from './Artifacts';
-import AgentTool from './AgentTool';
-import CodeForm from './Code/Form';
-import MCPTools from './MCPTools';
+import AgentAvatar from './AgentAvatar';
+import { Panel } from '~/common';
 
-/** A skill lookup only counts as a confirmed miss on 404/403 — deleted or no
- *  longer shared. Transient/network/server errors must not present a valid
- *  configured skill as removable. */
-const isConfirmedSkillMiss = (error: unknown): boolean => {
-  const status = (error as { response?: { status?: number } } | null)?.response?.status;
-  return status === 404 || status === 403;
-};
-
-const labelClass = 'mb-2 text-token-text-primary block text-sm font-medium';
-const inputClass = cn(
-  defaultTextProps,
-  'flex w-full px-3 py-2 border-border-light bg-surface-secondary focus-visible:ring-2 focus-visible:ring-ring-primary',
-  removeFocusOutlines,
-);
+const fieldClass = 'h-9';
 
 export default function AgentConfig() {
   const localize = useLocalize();
-  const fileMap = useFileMapContext();
-  const { showToast } = useToastContext();
   const methods = useFormContext<AgentForm>();
-  const [showToolDialog, setShowToolDialog] = useState(false);
-  const [showMCPToolDialog, setShowMCPToolDialog] = useState(false);
-  const [showSkillDialog, setShowSkillDialog] = useState(false);
-  const {
-    actions,
-    setAction,
-    regularTools,
-    agentsConfig,
-    availableMCPServers,
-    mcpServersMap,
-    setActivePanel,
-    endpointsConfig,
-  } = useAgentPanelContext();
+  const { setActivePanel, endpointsConfig, agentsConfig } = useAgentPanelContext();
+  const { contextEnabled } = useAgentCapabilities(agentsConfig?.capabilities);
 
   const {
     control,
@@ -81,179 +29,14 @@ export default function AgentConfig() {
   const provider = useWatch({ control, name: 'provider' });
   const model = useWatch({ control, name: 'model' });
   const agent = useWatch({ control, name: 'agent' });
-  const tools = useWatch({ control, name: 'tools' });
-  const skills = useWatch({ control, name: 'skills' });
-  const skillsActive = useWatch({ control, name: 'skills_enabled' });
   const agent_id = useWatch({ control, name: 'id' });
-
-  let skillsHintKey:
-    | 'com_ui_skills_disabled_hint'
-    | 'com_ui_skills_enabled_allowlist_hint'
-    | 'com_ui_skills_enabled_all_hint' = 'com_ui_skills_disabled_hint';
-  if (skillsActive === true) {
-    skillsHintKey =
-      (skills ?? []).length > 0
-        ? 'com_ui_skills_enabled_allowlist_hint'
-        : 'com_ui_skills_enabled_all_hint';
-  }
-
-  const {
-    codeEnabled,
-    toolsEnabled,
-    contextEnabled,
-    actionsEnabled,
-    skillsEnabled,
-    artifactsEnabled,
-    webSearchEnabled,
-    fileSearchEnabled,
-  } = useAgentCapabilities(agentsConfig?.capabilities);
-
-  const hasSkillsAccess = useHasAccess({
-    permissionType: PermissionTypes.SKILLS,
-    permission: Permissions.USE,
-  });
-  const showSkills = hasSkillsAccess && skillsEnabled;
-  const { data: skillsData } = useListSkillsQuery({ limit: 100 }, { enabled: showSkills });
-  const skillsMap = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const skill of skillsData?.skills ?? []) {
-      map.set(skill._id, skill.name);
-    }
-    return map;
-  }, [skillsData?.skills]);
-
-  /** Allowlist ids missing from the first catalog page (`limit: 100`) are
-   *  resolved individually — a cache miss alone must never present a valid
-   *  configured skill as unavailable and invite its removal. */
-  const unresolvedSkillIds = useMemo(
-    () => (skillsData === undefined ? [] : (skills ?? []).filter((id) => !skillsMap.has(id))),
-    [skills, skillsMap, skillsData],
-  );
-  const unresolvedSkillQueries = useQueries({
-    queries: unresolvedSkillIds.map((skillId) => ({
-      queryKey: [QueryKeys.skill, skillId],
-      queryFn: () => dataService.getSkill(skillId),
-      retry: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    })),
-  });
-  const unresolvedSkills = useMemo(() => {
-    const map = new Map<string, { name?: string; missing: boolean }>();
-    unresolvedSkillIds.forEach((skillId, index) => {
-      const query = unresolvedSkillQueries[index];
-      if (query?.isError === true && isConfirmedSkillMiss(query.error)) {
-        map.set(skillId, { missing: true });
-      } else if (query?.data?.name) {
-        map.set(skillId, { name: query.data.name, missing: false });
-      }
-    });
-    return map;
-  }, [unresolvedSkillIds, unresolvedSkillQueries]);
-
-  const { data: agentFiles = [] } = useGetAgentFiles(agent_id);
-
-  const mergedFileMap = useMemo(() => {
-    const newFileMap = { ...fileMap };
-    agentFiles.forEach((file) => {
-      if (file.file_id) {
-        newFileMap[file.file_id] = file;
-      }
-    });
-    return newFileMap;
-  }, [fileMap, agentFiles]);
-
-  const context_files = useMemo(() => {
-    if (typeof agent === 'string') {
-      return [];
-    }
-
-    if (agent?.id !== agent_id) {
-      return [];
-    }
-
-    if (agent.context_files) {
-      return agent.context_files;
-    }
-
-    const _agent = processAgentOption({
-      agent,
-      fileMap: mergedFileMap,
-    });
-    return _agent.context_files ?? [];
-  }, [agent, agent_id, mergedFileMap]);
-
-  const knowledge_files = useMemo(() => {
-    if (typeof agent === 'string') {
-      return [];
-    }
-
-    if (agent?.id !== agent_id) {
-      return [];
-    }
-
-    if (agent.knowledge_files) {
-      return agent.knowledge_files;
-    }
-
-    const _agent = processAgentOption({
-      agent,
-      fileMap: mergedFileMap,
-    });
-    return _agent.knowledge_files ?? [];
-  }, [agent, agent_id, mergedFileMap]);
-
-  const code_files = useMemo(() => {
-    if (typeof agent === 'string') {
-      return [];
-    }
-
-    if (agent?.id !== agent_id) {
-      return [];
-    }
-
-    if (agent.code_files) {
-      return agent.code_files;
-    }
-
-    const _agent = processAgentOption({
-      agent,
-      fileMap: mergedFileMap,
-    });
-    return _agent.code_files ?? [];
-  }, [agent, agent_id, mergedFileMap]);
-
-  const handleAddActions = useCallback(() => {
-    if (isEphemeralAgent(agent_id)) {
-      showToast({
-        message: localize('com_assistants_actions_disabled'),
-        status: 'warning',
-      });
-      return;
-    }
-    setActivePanel(Panel.actions);
-  }, [agent_id, setActivePanel, showToast, localize]);
+  const { contextFiles } = useAgentFileEntries();
 
   const providerValue = typeof provider === 'string' ? provider : provider?.value;
-  let Icon: IconComponentTypes | null | undefined;
-  let endpointType: EModelEndpoint | undefined;
-  let endpointIconURL: string | undefined;
-  let iconKey: string | undefined;
-
-  if (providerValue !== undefined) {
-    endpointType = getEndpointField(endpointsConfig, providerValue as string, 'type');
-    endpointIconURL = getEndpointField(endpointsConfig, providerValue as string, 'iconURL');
-    iconKey = getIconKey({
-      endpoint: providerValue as string,
-      endpointsConfig,
-      endpointType,
-      endpointIconURL,
-    });
-    Icon = icons[iconKey];
-  }
-
-  const { toolIds, mcpServerNames } = useVisibleTools(tools, regularTools, mcpServersMap);
+  const { provider: providerId, imageURL } = useProviderIcon({
+    endpoint: providerValue as string,
+    endpointsConfig,
+  });
 
   return (
     <>
@@ -272,12 +55,12 @@ export default function AgentConfig() {
             rules={{ required: localize('com_ui_agent_name_is_required') }}
             control={control}
             render={({ field }) => (
-              <>
-                <input
+              <div className="flex flex-col">
+                <Input
                   {...field}
                   value={field.value ?? ''}
                   maxLength={256}
-                  className={inputClass}
+                  className={cn(fieldClass, 'font-medium')}
                   id="name"
                   type="text"
                   placeholder={localize('com_agents_name_placeholder')}
@@ -288,39 +71,24 @@ export default function AgentConfig() {
                 {errors.name && (
                   <div
                     id="agent-name-error"
-                    className="mt-1 w-56 text-sm text-red-500"
+                    className="mt-1 text-xs text-text-destructive"
                     role="alert"
                   >
                     {errors.name.message}
                   </div>
                 )}
-              </>
+              </div>
             )}
           />
-          <Controller
-            name="id"
-            control={control}
-            render={({ field }) => (
-              <p className="h-3 text-xs italic text-text-secondary" aria-live="polite">
-                {field.value}
-              </p>
-            )}
-          />
-        </div>
-        {/* Description */}
-        <div className="mb-4">
-          <label className={labelClass} htmlFor="description">
-            {localize('com_ui_description')}
-          </label>
           <Controller
             name="description"
             control={control}
             render={({ field }) => (
-              <input
+              <Input
                 {...field}
                 value={field.value ?? ''}
                 maxLength={512}
-                className={inputClass}
+                className={fieldClass}
                 id="description"
                 type="text"
                 placeholder={localize('com_agents_description_placeholder')}
@@ -354,18 +122,23 @@ export default function AgentConfig() {
             {localize('com_ui_model')}
           </label>
           <button
+            id="provider"
             type="button"
             onClick={() => setActivePanel(Panel.model)}
-            className="btn btn-neutral border-token-border-light relative h-9 w-full rounded-lg font-medium"
+            title={model || undefined}
+            className={cn(
+              'relative flex h-9 w-full min-w-0 items-center overflow-hidden rounded-lg border border-border-light bg-surface-secondary text-sm font-medium text-text-primary transition-colors hover:bg-surface-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-primary',
+              model != null && model ? 'px-1' : 'px-3',
+            )}
           >
-            <div className="flex w-full items-center gap-2">
-              {Icon && (
+            <div className="flex w-full min-w-0 items-center gap-2">
+              {providerValue !== undefined && (
                 <div className="shadow-stroke relative flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white text-black dark:bg-white">
-                  <Icon
+                  <ResolvedProviderIcon
+                    provider={providerId}
+                    imageURL={imageURL}
+                    size={16}
                     className="h-2/3 w-2/3"
-                    endpoint={providerValue as string}
-                    endpointType={endpointType}
-                    iconURL={endpointIconURL}
                   />
                 </div>
               )}

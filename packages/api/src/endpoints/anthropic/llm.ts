@@ -2,8 +2,12 @@ import { Agent } from 'undici';
 import { logger } from '@librechat/data-schemas';
 import { AnthropicClientOptions } from '@librechat/agents';
 import {
-  anthropicSettings,
+  isOpus55Model,
+  THINKING_BINDING_BETA,
+  clampOutputConfigEffort,
   omitsSamplingParameters,
+  isThinkingDisabled,
+  anthropicSettings,
   removeNullishValues,
   ThinkingDisplay,
   AuthKeys,
@@ -145,8 +149,19 @@ function getLLMConfig(
       ? ((persistedThinking as { display: string }).display as ThinkingDisplay | string)
       : undefined;
 
+  /**
+   * `thinking` may round-trip as the full Anthropic object rather than a
+   * boolean. Normalize to a flag so a persisted `{ type: 'disabled' }` (e.g. a
+   * Sonnet 5 "thinking off" config stored back into `model_parameters`) is
+   * treated as off — a truthy object would otherwise flip thinking back on.
+   */
+  const thinkingFlag =
+    typeof persistedThinking === 'object' && persistedThinking != null
+      ? (persistedThinking as { type?: string }).type !== 'disabled'
+      : (persistedThinking ?? anthropicSettings.thinking.default);
+
   const systemOptions = {
-    thinking: options.modelOptions?.thinking ?? anthropicSettings.thinking.default,
+    thinking: thinkingFlag,
     promptCache: options.modelOptions?.promptCache ?? anthropicSettings.promptCache.default,
     promptCacheTtl:
       options.modelOptions?.promptCacheTtl ?? anthropicSettings.promptCacheTtl.default,
@@ -243,6 +258,16 @@ function getLLMConfig(
     if (requestOptions.invocationKwargs?.output_config) {
       delete requestOptions.invocationKwargs.output_config;
     }
+  }
+
+  /**
+   * Opus 5 rejects `xhigh`/`max` effort while thinking is disabled (400).
+   * `configureReasoning` returns before setting effort on the disabled path, so
+   * the value applied just above is the one that would ship — clamp it to the
+   * highest level the model accepts in that combination.
+   */
+  if (isThinkingDisabled(requestOptions.thinking)) {
+    clampOutputConfigEffort(resolvedModel, requestOptions.invocationKwargs?.output_config);
   }
 
   const hasActiveThinking = requestOptions.thinking != null;
@@ -347,6 +372,25 @@ function getLLMConfig(
     }
   }
 
+  /** The SDK reads outputConfig, not invocationKwargs.output_config. Keep the
+   * legacy field for persisted configs and OpenAI-compatible transforms. */
+  if (
+    requestOptions.invocationKwargs?.output_config &&
+    !options.dropParams?.includes('outputConfig')
+  ) {
+    requestOptions.outputConfig = requestOptions.invocationKwargs.output_config;
+  }
+
+  /** block_binding is invalid without its beta header. Honor an administrator
+   * dropping clientOptions without leaving a beta-only field in the body. */
+  if (
+    shouldDropClientOptions &&
+    requestOptions.thinking &&
+    'block_binding' in requestOptions.thinking
+  ) {
+    delete requestOptions.thinking.block_binding;
+  }
+
   if (shouldOmitSamplingParameters) {
     delete requestOptions.temperature;
     delete requestOptions.topP;
@@ -379,7 +423,7 @@ function getLLMConfig(
     }
     requestOptions.clientOptions.defaultHeaders = appendAnthropicBetaHeader(
       requestOptions.clientOptions.defaultHeaders as Record<string, string> | undefined,
-      FINE_GRAINED_TOOL_STREAMING_BETA,
+      isOpus55Model(resolvedModel) ? THINKING_BINDING_BETA : FINE_GRAINED_TOOL_STREAMING_BETA,
     );
   }
 
